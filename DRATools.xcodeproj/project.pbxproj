@@ -6,11 +6,104 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXFileReference section */
+		F116DFB81893033C00830374 /* cl_all.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = cl_all.py; sourceTree = "<group>"; };
+		F12D203218C6601F0044FAF4 /* fix_outofeclipse.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = fix_outofeclipse.py; sourceTree = "<group>"; };
+		F139C88818627C8100C228A7 /* eclmap.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = eclmap.py; sourceTree = "<group>"; };
+		F139C8891863799800C228A7 /* eclmapF.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = eclmapF.py; sourceTree = "<group>"; };
+		F139C88A18638E6500C228A7 /* clmin.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = clmin.py; sourceTree = "<group>"; };
+		F16473121868D86F003B308D /* clmin_MC.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = clmin_MC.py; sourceTree = "<group>"; };
+		F16473131868D8E2003B308D /* clminF.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = clminF.py; sourceTree = "<group>"; };
+		F1647314186A218A003B308D /* pdm_MC.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = pdm_MC.py; sourceTree = "<group>"; };
+		F1647315186B3350003B308D /* pdot.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = pdot.py; sourceTree = "<group>"; };
+		F1647316186E072A003B308D /* eclmap_all.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = eclmap_all.py; sourceTree = "<group>"; };
+		F1647317186E0CC1003B308D /* trailedspec.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = trailedspec.py; sourceTree = "<group>"; };
+		F16AE2AA1575B25F00175EB1 /* gdefringe.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = gdefringe.py; path = SOAR/goodman/gdefringe.py; sourceTree = "<group>"; };
+		F16AE2BE1576E89B00175EB1 /* gdefringeF.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = gdefringeF.py; path = SOAR/goodman/gdefringeF.py; sourceTree = "<group>"; };
+		F1968EBD188079D100B50350 /* sland.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = sland.sh; sourceTree = "<group>"; };
+		F198D17018F3224900B9798F /* specfitMC.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = specfitMC.py; path = specfit/specfitMC.py; sourceTree = "<group>"; };
+		F1D8A8B318E3B5EA00693FF4 /* specfitF.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = specfitF.py; path = specfit/specfitF.py; sourceTree = "<group>"; };
+		F1D8A8B418E3BE0400693FF4 /* specfit_v0.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = specfit_v0.py; sourceTree = "<group>"; };
+		F1D8A8B518E3BF0300693FF4 /* __init__.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = __init__.py; path = specfit/__init__.py; sourceTree = "<group>"; };
+		F1D8A8B718E98C1800693FF4 /* mkobsspec.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = mkobsspec.py; sourceTree = "<group>"; };
+		F1D8A8B818EB658500693FF4 /* dk2npy.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = dk2npy.py; sourceTree = "<group>"; };
+		F1DF7B581847AFF8006E6E02 /* psim_tst01.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = psim_tst01.py; sourceTree = "<group>"; };
+		F1DF7B591847D3DE006E6E02 /* psim_tst02.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = psim_tst02.py; sourceTree = "<group>"; };
+		F1DF7B5A1847D3F6006E6E02 /* psimF.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = psimF.py; sourceTree = "<group>"; };
+		F1ED28A7185F771C00B7EB8F /* cluz.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = cluz.py; sourceTree = "<group>"; };
+		F1F8F59018D8AC6C006B551B /* trailedspec2.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = trailedspec2.py; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
 /* Begin PBXGroup section */
 		F16AE2A11575B19100175EB1 = {
 			isa = PBXGroup;
 			children = (
+				F1ED28A5185F76CF00B7EB8F /* CAL87 */,
+				F1DF7B571847AFC6006E6E02 /* activity */,
+				F16AE2AB1575B3CB00175EB1 /* SOAR */,
+				F1D8A8B218E3B5AE00693FF4 /* specfit */,
 			);
+			sourceTree = "<group>";
+		};
+		F16AE2AB1575B3CB00175EB1 /* SOAR */ = {
+			isa = PBXGroup;
+			children = (
+				F16AE2AC1575B3D600175EB1 /* goodman */,
+			);
+			name = SOAR;
+			sourceTree = "<group>";
+		};
+		F16AE2AC1575B3D600175EB1 /* goodman */ = {
+			isa = PBXGroup;
+			children = (
+				F16AE2BE1576E89B00175EB1 /* gdefringeF.py */,
+				F16AE2AA1575B25F00175EB1 /* gdefringe.py */,
+			);
+			name = goodman;
+			sourceTree = "<group>";
+		};
+		F1D8A8B218E3B5AE00693FF4 /* specfit */ = {
+			isa = PBXGroup;
+			children = (
+				F1D8A8B318E3B5EA00693FF4 /* specfitF.py */,
+				F198D17018F3224900B9798F /* specfitMC.py */,
+				F1D8A8B518E3BF0300693FF4 /* __init__.py */,
+				F1D8A8B418E3BE0400693FF4 /* specfit_v0.py */,
+				F1D8A8B718E98C1800693FF4 /* mkobsspec.py */,
+				F1D8A8B818EB658500693FF4 /* dk2npy.py */,
+			);
+			name = specfit;
+			sourceTree = "<group>";
+		};
+		F1DF7B571847AFC6006E6E02 /* activity */ = {
+			isa = PBXGroup;
+			children = (
+				F1DF7B581847AFF8006E6E02 /* psim_tst01.py */,
+				F1DF7B591847D3DE006E6E02 /* psim_tst02.py */,
+				F1DF7B5A1847D3F6006E6E02 /* psimF.py */,
+			);
+			name = activity;
+			sourceTree = "<group>";
+		};
+		F1ED28A5185F76CF00B7EB8F /* CAL87 */ = {
+			isa = PBXGroup;
+			children = (
+				F1ED28A7185F771C00B7EB8F /* cluz.py */,
+				F12D203218C6601F0044FAF4 /* fix_outofeclipse.py */,
+				F116DFB81893033C00830374 /* cl_all.py */,
+				F139C88A18638E6500C228A7 /* clmin.py */,
+				F1647314186A218A003B308D /* pdm_MC.py */,
+				F1647315186B3350003B308D /* pdot.py */,
+				F16473121868D86F003B308D /* clmin_MC.py */,
+				F16473131868D8E2003B308D /* clminF.py */,
+				F139C88818627C8100C228A7 /* eclmap.py */,
+				F1647316186E072A003B308D /* eclmap_all.py */,
+				F1968EBD188079D100B50350 /* sland.sh */,
+				F1647317186E0CC1003B308D /* trailedspec.py */,
+				F1F8F59018D8AC6C006B551B /* trailedspec2.py */,
+				F139C8891863799800C228A7 /* eclmapF.py */,
+			);
+			name = CAL87;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
