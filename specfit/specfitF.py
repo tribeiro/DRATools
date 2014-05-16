@@ -6,7 +6,8 @@
 ######################################################################
 
 import numpy as np
-import pyfits
+#import pyfits
+from astropy.io import fits as pyfits
 from astropysics import spec
 import scipy.ndimage.filters
 import scipy.constants
