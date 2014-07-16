@@ -5,6 +5,7 @@
 
 ######################################################################
 
+import os
 import numpy as np
 #import pyfits
 from astropy.io import fits as pyfits
@@ -31,10 +32,11 @@ Initialize class.
 		# number of componentes
 		self.nspec = nspec
 
-		# Store template spectra
+		# Store template spectra and scale factor
 		self.template = [ [] ]*nspec
 		self.templateNames = [ [] ]*nspec
-				
+		self.templateScale = [ [] ]*nspec
+		
 		# velocity for each component
 		self.vel = np.zeros(nspec)
 		
@@ -57,7 +59,7 @@ Initialize class.
 				
 	##################################################################
 
-	def loadtxtTemplate(self,ncomp,filename):
+	def loadNextGenTemplate(self,ncomp,filename):
 		'''
 Loads template spectra from a list of files (in filename), for 
 component ncomp.
@@ -67,7 +69,7 @@ component ncomp.
 							dtype='S',ndmin=1)
 		
 		self.template[ncomp] = [0]*len(splist)
-
+		self.templateScale[ncomp] = [1]*len(splist)
 
 		logging.debug('Loading template spectra for component %i from %s[%i]'%(ncomp,filename,len(splist)))
 
@@ -77,7 +79,9 @@ component ncomp.
 			sp = np.loadtxt(splist[i],unpack=True,usecols=(0,1),
 							converters={0:lambda s: float(s.replace('D','e')),
 										1:lambda s: float(s.replace('D','e'))})
-			self.template[ncomp][i] = spec.Spectrum(sp[0],10**sp[1])
+			asort = sp[0].argsort()
+			self.template[ncomp][i] = spec.Spectrum(sp[0][asort],
+													10**(sp[1][asort])+8.0)
 
 		return 0
 
@@ -96,6 +100,7 @@ component ncomp.
 		
 		self.template[ncomp] = [0]*len(splist[0])
 		self.templateNames[ncomp] = [0]*len(splist[0])
+		self.templateScale[ncomp] = [1]*len(splist[0]) #np.zeros(len(splist))+1.0
 		
 		if self.grid_ndim[ncomp] > 0:
 			grid = splist[1:self.grid_ndim[ncomp]+1]
@@ -116,6 +121,52 @@ component ncomp.
 
 	##################################################################
 
+	def loadCoelhoTemplate(self,ncomp,filename):
+		'''
+		Loads template spectra from a list of files (in filename), for
+		component ncomp.
+		'''
+		
+		splist = np.loadtxt(filename,unpack=True,
+		dtype='S',ndmin=2)
+		if splist.shape[0] < self.grid_ndim[ncomp]:
+			raise IOError('Grid dimensions is not consistent with expected. Expecting %i got %i.'%(self.grid_ndim[ncomp],splist.shape[0]))
+		
+		self.template[ncomp] = [0]*len(splist[0])
+		self.templateNames[ncomp] = [0]*len(splist[0])
+		self.templateScale[ncomp] = [1]*len(splist[0])
+		
+		if self.grid_ndim[ncomp] > 0:
+			grid = splist[1:self.grid_ndim[ncomp]+1]
+			index = np.arange(len(splist[0])).reshape((len(np.unique(grid[0])),len(np.unique(grid[1]))))
+			self.Grid[ncomp] = index
+		
+		logging.debug('Loading template spectra for component %i from %s[%i]'%(ncomp,filename,len(splist)))
+		
+		notFound = 0
+		for i in range(len(splist[0])):
+			
+			logging.debug('Reading %s'%(splist[0][i]))
+			if os.path.exists(splist[0][i]):
+				hdu = pyfits.open(splist[0][i])
+				wave = hdu[0].header['CRVAL1'] + np.arange(len(hdu[0].data))*hdu[0].header['CDELT1']
+				self.template[ncomp][i] = spec.Spectrum(wave,hdu[0].data)
+				self.templateNames[ncomp][i] = splist[0][i]
+			else:
+				logging.warning('Could not find template %s. %i/%i'%(splist[0][i],notFound,len(splist[0])))
+				notFound+=1
+				self.template[ncomp][i] = self.template[ncomp][i-1]
+				self.templateNames[ncomp][i] = splist[0][i]+"NOTFOUND"
+				
+			#sp = np.load(splist[0][i])
+		if notFound > len(splist[0])/2:
+			raise IOError('More than 50% of template spectra could not be loaded')
+				
+		return 0
+	
+	
+	##################################################################
+
 	def loadPickle(self,filename,linearize=True):
 		'''
 Loads observed spectra from numpy pickle file.
@@ -128,9 +179,10 @@ Loads observed spectra from numpy pickle file.
 		self.ospec = spec.Spectrum(sp[0],sp[1])
 
 		if linearize and not self.ospec.isLinear():
-			logging.info('Linearizing observed spectra')
+			logging.debug('Linearizing observed spectra')
 			self.ospec.linearize()
-
+			logging.debug('Done')
+		
 		return 0
 
 
@@ -166,9 +218,10 @@ Load the observed spectra.
 									sp[1].data['flux'])
 
 		if linearize and not self.ospec.isLinear():
-			logging.info('Linearizing observed spectra')
+			logging.debug('Linearizing observed spectra')
 			self.ospec.linearize()
-			
+			logging.debug('Done')
+		
 		return 0
 
 	##################################################################
@@ -203,7 +256,7 @@ Calculate model spectra.
 		_model = spec.Spectrum(	self.template[0][self.ntemp[0]].x,
 								self.template[0][self.ntemp[0]].flux)
 
-		_model.flux*=self.scale[0]
+		_model.flux*=self.scale[0]*self.templateScale[0][self.ntemp[0]]
 		_model.x *= np.sqrt((1.0 + self.vel[0]/_c_kms)/(1. - self.vel[0]/_c_kms))
 
 		for i in range(1,self.nspec):
@@ -214,7 +267,7 @@ Calculate model spectra.
 			tmp.x *= np.sqrt((1.0 + self.vel[i]/_c_kms)/(1. - self.vel[i]/_c_kms))
 			tmp = spec.Spectrum(*tmp.resample(_model.x,replace=False))
 			
-			_model.flux += self.scale[1]*tmp.flux
+			_model.flux += self.scale[1]*tmp.flux*self.templateScale[i][self.ntemp[i]]
 		
 		if not _model.isLinear():
 			logging.warning('Data must be linearized...')
@@ -244,7 +297,8 @@ Normalize spectra against data in the wavelenght regions
 			
 			scale = np.mean(self.ospec.flux[mask0])/np.mean(self.template[ncomp][i].flux[maskt])
 
-			self.template[ncomp][i].flux *= scale
+			self.templateScale[ncomp][i] = scale
+			#self.template[ncomp][i].flux *= scale
 	##################################################################
 
 	def gaussian_filter(self,ncomp,kernel):
@@ -271,16 +325,28 @@ those of the observed spectrum and linearize the spectrum.
 		logging.debug('Preprocessing all template spectra. Spectra will be trimmed and linearized')
 				
 		ores = self.obsRes()
-		xmin = self.ospec.x[0] -4.0*ores
-		xmax = self.ospec.x[-1]+4.0*ores
+		
+		xmin = np.max([self.template[0][0].x[0] ,self.ospec.x[0] - 100.0*ores])
+		xmax = np.min([self.template[0][0].x[-1],self.ospec.x[-1]+ 100.0*ores])
 		
 		for i in range(self.nspec):
 			for j in range(len(self.template[i])):
 				#t_res = np.mean(self.template[i][j].x[1:]-self.template[i][j].x[:-1])
 				#newx = np.arange(xmin,xmax,t_res)
 				#self.template[i][j] = spec.Spectrum(*self.template[i][j].resample(newx,replace=False))
-
+				
 				self.template[i][j].linearize(lower=xmin, upper=xmax)
+				
+				tmp_spres = np.mean(self.template[i][j].x[1:]-self.template[i][j].x[:-1])
+				logging.debug('Template spres = %f'%(tmp_spres))
+				logging.debug('Data spres = %f'%(ores))
+				
+				if tmp_spres < ores/10.:
+					logging.debug('Template spectroscopic resolution too high! Resampling...')
+					newx = np.arange(xmin,xmax,ores/10.)
+					self.template[i][j] = spec.Spectrum(*self.template[i][j].resample(newx,replace=False))
+
+
 
 	##################################################################
 
@@ -289,7 +355,7 @@ those of the observed spectrum and linearize the spectrum.
 		splist = np.loadtxt(filename,unpack=True,usecols=(0,),
 							dtype='S',ndmin=1)
 
-		logging.debug('Saving template spectr to pickle file...')
+		logging.debug('Saving template spectra to pickle file...')
 		
 		for ntemp in range(len(self.template[ncomp])):
 			logging.debug(splist[ntemp])
@@ -315,7 +381,7 @@ Find a suitable scale values for all spectra.
 				maskt = np.bitwise_and(	self.template[i][j].x > self.ospec.x[0],
 										self.template[i][j].x < self.ospec.x[-1])
 
-				nscale = obsmean/np.mean(self.template[i][j].flux[maskt])
+				nscale = obsmean/np.mean(self.template[i][j].flux[maskt])/self.templateScale[i][j]
 
 				if maxscale < nscale:
 					maxscale = nscale

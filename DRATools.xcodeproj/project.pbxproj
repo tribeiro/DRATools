@@ -18,15 +18,23 @@
 		F1647315186B3350003B308D /* pdot.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = pdot.py; sourceTree = "<group>"; };
 		F1647316186E072A003B308D /* eclmap_all.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = eclmap_all.py; sourceTree = "<group>"; };
 		F1647317186E0CC1003B308D /* trailedspec.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = trailedspec.py; sourceTree = "<group>"; };
+		F1691510192ED64B0049BDDB /* mcmatchgrid.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = mcmatchgrid.py; path = specfit/mcmatchgrid.py; sourceTree = "<group>"; };
+		F1691511192FD22F0049BDDB /* get_Teff_logg.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = get_Teff_logg.py; path = specfit/get_Teff_logg.py; sourceTree = "<group>"; };
 		F16AE2AA1575B25F00175EB1 /* gdefringe.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = gdefringe.py; path = SOAR/goodman/gdefringe.py; sourceTree = "<group>"; };
 		F16AE2BE1576E89B00175EB1 /* gdefringeF.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = gdefringeF.py; path = SOAR/goodman/gdefringeF.py; sourceTree = "<group>"; };
 		F1968EBD188079D100B50350 /* sland.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = sland.sh; sourceTree = "<group>"; };
 		F198D17018F3224900B9798F /* specfitMC.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = specfitMC.py; path = specfit/specfitMC.py; sourceTree = "<group>"; };
+		F1C713CB191E7DB100341D5C /* hierachdits.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = hierachdits.py; sourceTree = "<group>"; };
 		F1D8A8B318E3B5EA00693FF4 /* specfitF.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = specfitF.py; path = specfit/specfitF.py; sourceTree = "<group>"; };
 		F1D8A8B418E3BE0400693FF4 /* specfit_v0.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = specfit_v0.py; sourceTree = "<group>"; };
 		F1D8A8B518E3BF0300693FF4 /* __init__.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = __init__.py; path = specfit/__init__.py; sourceTree = "<group>"; };
 		F1D8A8B718E98C1800693FF4 /* mkobsspec.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = mkobsspec.py; sourceTree = "<group>"; };
 		F1D8A8B818EB658500693FF4 /* dk2npy.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = dk2npy.py; sourceTree = "<group>"; };
+		F1DBF7091959D942004B88B3 /* pl_grid.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = pl_grid.py; path = specfit/pl_grid.py; sourceTree = "<group>"; };
+		F1DBF70A195A41EB004B88B3 /* ngen2npy.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = ngen2npy.py; path = specfit/ngen2npy.py; sourceTree = "<group>"; };
+		F1DBF70D195DAD62004B88B3 /* compare_mcres.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = compare_mcres.py; path = specfit/compare_mcres.py; sourceTree = "<group>"; };
+		F1DBF70F19684BA5004B88B3 /* cluz.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = cluz.py; path = UGem/cluz.py; sourceTree = "<group>"; };
+		F1DBF71119687B13004B88B3 /* cluz.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = cluz.py; path = UXUma/cluz.py; sourceTree = "<group>"; };
 		F1DF7B581847AFF8006E6E02 /* psim_tst01.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = psim_tst01.py; sourceTree = "<group>"; };
 		F1DF7B591847D3DE006E6E02 /* psim_tst02.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = psim_tst02.py; sourceTree = "<group>"; };
 		F1DF7B5A1847D3F6006E6E02 /* psimF.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = psimF.py; sourceTree = "<group>"; };
@@ -38,10 +46,13 @@
 		F16AE2A11575B19100175EB1 = {
 			isa = PBXGroup;
 			children = (
+				F1DBF710196879D6004B88B3 /* UXUma */,
+				F1DBF70E19684975004B88B3 /* UGem */,
 				F1ED28A5185F76CF00B7EB8F /* CAL87 */,
 				F1DF7B571847AFC6006E6E02 /* activity */,
 				F16AE2AB1575B3CB00175EB1 /* SOAR */,
 				F1D8A8B218E3B5AE00693FF4 /* specfit */,
+				F1C713CA191E7D7500341D5C /* dist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -62,6 +73,14 @@
 			name = goodman;
 			sourceTree = "<group>";
 		};
+		F1C713CA191E7D7500341D5C /* dist */ = {
+			isa = PBXGroup;
+			children = (
+				F1C713CB191E7DB100341D5C /* hierachdits.py */,
+			);
+			name = dist;
+			sourceTree = "<group>";
+		};
 		F1D8A8B218E3B5AE00693FF4 /* specfit */ = {
 			isa = PBXGroup;
 			children = (
@@ -71,8 +90,29 @@
 				F1D8A8B418E3BE0400693FF4 /* specfit_v0.py */,
 				F1D8A8B718E98C1800693FF4 /* mkobsspec.py */,
 				F1D8A8B818EB658500693FF4 /* dk2npy.py */,
+				F1DBF70A195A41EB004B88B3 /* ngen2npy.py */,
+				F1691510192ED64B0049BDDB /* mcmatchgrid.py */,
+				F1691511192FD22F0049BDDB /* get_Teff_logg.py */,
+				F1DBF7091959D942004B88B3 /* pl_grid.py */,
+				F1DBF70D195DAD62004B88B3 /* compare_mcres.py */,
 			);
 			name = specfit;
+			sourceTree = "<group>";
+		};
+		F1DBF70E19684975004B88B3 /* UGem */ = {
+			isa = PBXGroup;
+			children = (
+				F1DBF70F19684BA5004B88B3 /* cluz.py */,
+			);
+			name = UGem;
+			sourceTree = "<group>";
+		};
+		F1DBF710196879D6004B88B3 /* UXUma */ = {
+			isa = PBXGroup;
+			children = (
+				F1DBF71119687B13004B88B3 /* cluz.py */,
+			);
+			name = UXUma;
 			sourceTree = "<group>";
 		};
 		F1DF7B571847AFC6006E6E02 /* activity */ = {

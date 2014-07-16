@@ -27,11 +27,11 @@ def main(argv):
 				2:'Hard (0.5 - 1.0 keV)',
 				3:'Hard (0.5 - 1.4 keV)'}
 	rcirc = 0.191
-	vmin = [ {0:-5.5,10:-5.42, 11:-5.13,12:-5.37, 13:-5.13, 21:-5.44},
+	vmin = [ {0:-5.5,10:-5.42, 11:-5.13,12:-5.37, 13:-5.13, 15:-5.44},
 			 {1:-5.1},
 			 {0:-5.13,1:-5.36},
 			 {0:-5.13,1:-5.36} ]
-	vmax = [ {0:-4.7,10:-4.92, 11:-4.57,12:-4.87,13:-4.57, 21:-5.34},
+	vmax = [ {0:-4.7,10:-4.92, 11:-4.57,12:-4.87,13:-4.57, 15:-4.54},
 			 {1:-5.0},
 			 {0:-4.63,1:-4.86},
 			 {0:-4.63,1:-4.86} ]
@@ -58,11 +58,11 @@ def main(argv):
 	print 'Running on %s[%i] dataset...'%(dsetoptions[opt.dataset],opt.dataset)
 	##################################################################
 	# Input definition
-	_path = os.path.expanduser('~/Documents/analise/CAL87/emap_%skeV_rateall/par%02i'%(dsetoptions[opt.dataset],opt.parset))
+	_path = os.path.expanduser('/Volumes/TiagoHD2/analise/CAL87/emap_%skeV_rateall/par%02i'%(dsetoptions[opt.dataset],opt.parset))
 	_opath = os.path.expanduser('~/Dropbox/Documents/paper_cal87/Figures')
 	_oname = 'cal87_%skeV_rateall.pdf'%(dsetoptions[opt.dataset])
-	_cldat = 'cal87_%skeV_rateall.dat.122'%(dsetoptions[opt.dataset]) #'cal87_0305keV_rateall.dat.122'
-	_clmod = 'cal87_%skeV_rateall.prd.122'%(dsetoptions[opt.dataset])
+	_cldat = 'cal87_%skeV_rateall.dat.61'%(dsetoptions[opt.dataset]) #'cal87_0305keV_rateall.dat.122'
+	_clmod = 'cal87_%skeV_rateall.prd.61'%(dsetoptions[opt.dataset])
 	_emap = 'cal87_%skeV_rateall.mem.51'%(dsetoptions[opt.dataset])
 	_mrad = 'cal87_%skeV_rateall.rad.51'%(dsetoptions[opt.dataset])
 	

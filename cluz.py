@@ -3,7 +3,7 @@
 '''
 	Show CAL 87 light curves for analysis purposes. 
 	
-	c - Tiago Ribeiro 16/12/2014
+	c - Tiago Ribeiro 16/12/2013
 '''
 
 import os,sys

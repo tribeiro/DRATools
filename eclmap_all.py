@@ -29,6 +29,8 @@ def main(argv):
 	ymin = [0.01,0,0.0]
 	ymax = [2.01,4,2.0]
 	
+	fator = [0.42,0.74]
+
 	from optparse import OptionParser
 	
 	parser = OptionParser()
@@ -57,13 +59,14 @@ def main(argv):
 		if dataset == 0:
 			parset = 13
 			col = 0
+			fac = fator[0]
 		else:
 			col = 1
 			parset = 1
-			
+			fac = fator[1]
 		##################################################################
 		# Input definition
-		_path = os.path.expanduser('~/Documents/analise/CAL87/emap_%skeV_rateall/par%02i'%(dsetoptions[dataset],parset))
+		_path = os.path.expanduser('/Volumes/TiagoHD2/analise/CAL87/emap_%skeV_rateall/par%02i'%(dsetoptions[dataset],parset))
 		_opath = os.path.expanduser('~/Dropbox/Documents/paper_cal87/Figures')
 		_oname = 'cal87_rateall.eps'
 		_cldat = 'cal87_%skeV_rateall.dat.122'%(dsetoptions[dataset]) #'cal87_0305keV_rateall.dat.122'
@@ -73,6 +76,7 @@ def main(argv):
 
 		cldat = np.loadtxt(os.path.join(_path,_cldat),unpack=True)
 		clmod = np.loadtxt(os.path.join(_path,_clmod),unpack=True)
+		print os.path.join(_path,_emap)
 		map = read_mem(os.path.join(_path,_emap))
 		rad = np.loadtxt(os.path.join(_path,_mrad),unpack=True)
 		lobr = np.loadtxt(os.path.join(_path,_lobr),unpack=True)
@@ -114,6 +118,9 @@ def main(argv):
 		
 		ax2 = py.subplot(2,3,1+3*col,aspect=0.4/2, adjustable='box')
 		
+		py.plot([-0.05,0.05],[fac,fac],'k:',lw=2)
+		#py.errorbar([0.],[fac],xerr=0.025,fmt='k')
+
 		py.errorbar(cldat[0],cldat[1],cldat[2],fmt='r.',capsize=0)
 		py.plot(clmod[0],clmod[1],'k-')
 					
