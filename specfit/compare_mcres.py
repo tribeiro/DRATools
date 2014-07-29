@@ -22,7 +22,7 @@ def main(argv):
 	dtype = [('scale', '<f8'), ('velocity', '<f8'),
 	 ('temp1', '<i4') , ('temp2', '<i4')]
 
-	hist = np.zeros(45*12).reshape(45,12)
+	hist = np.zeros(131*21).reshape(131,21)
 	
 	for pickle in args[1:]:
 		log.info('Reading in %s...'%(pickle))
@@ -34,7 +34,7 @@ def main(argv):
 		oarray['temp1'] = np.array(	[i[0] for i in db.trace('template')[:]] )
 		oarray['temp2'] = np.array(	[i[1] for i in db.trace('template')[:]] )
 		h2d,xx,yy = np.histogram2d(oarray['temp1'],oarray['temp2'],
-								   bins=( np.arange(-1,45) , np.arange(-1,12)))
+								   bins=( np.arange(-1,131) , np.arange(-1,21)))
 		hist += h2d
 		#py.plot(oarray['temp1'],oarray['temp2'],'.')
 

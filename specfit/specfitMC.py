@@ -46,7 +46,7 @@ C - Tiago Ribeiro
 	# Load template spectra, for each component as Picke files
 
 	spMod.grid_ndim[0] = 2 # Set grid dimension for 1st component
-	spMod.grid_ndim[1] = 2 # Set grid dimension for 2nd component
+	spMod.grid_ndim[1] = 3 # Set grid dimension for 2nd component
 
 	for i in range(ncomp):
 		if temptype == 1:
@@ -75,8 +75,8 @@ C - Tiago Ribeiro
 	max = np.zeros(ncomp)+maxlevel
 
 	scales = pymc.Uniform('scale', min, max, value=val,size=ncomp)
-	min,val,max = np.zeros(ncomp)-300.,np.zeros(ncomp),np.zeros(ncomp)+300.
-	velocity = pymc.Uniform('velocity', min, max , value=val,size=ncomp)
+	min,val,max = np.zeros(ncomp)-600.,np.zeros(ncomp),np.zeros(ncomp)+600.
+	velocity = pymc.Uniform('velocity', min, max , val ,size=ncomp)
 
 	gridmin = np.zeros(ncomp*np.sum(spMod.grid_ndim),dtype=int)
 	gridmax = np.zeros(ncomp*np.sum(spMod.grid_ndim),dtype=int)
@@ -170,6 +170,7 @@ one is used.''',type='int',default=1)
     tlist = [opt.grid]
 	
     dbname = outroot+'.pickle'
+    spname = outroot+'.spres.npy'
     if opt.no_overwrite and os.path.exists(dbname):
         logging.debug('File %s exists (running on "no overwrite" mode).'%dbname)
         index = 0
@@ -180,7 +181,18 @@ one is used.''',type='int',default=1)
             logging.debug('%s'%dbname)
 
         logging.info('dbname: %s'%dbname)
-    logging.info('Preparing model...')
+    if opt.no_overwrite and os.path.exists(spname):
+        logging.debug('File %s exists (running on "no overwrite" mode).'%spname)
+        index = 0
+        spname = outroot + '.spres.%04i.npy'%index
+        while os.path.exists(spname):
+            spname = outroot + '.spres.%04i.npy'%index
+            index+=1
+            logging.debug('%s'%spname)
+
+        logging.info('spname: %s'%spname)
+
+	logging.info('Preparing model...')
 	
     if opt.n_comp > 1:
 		tlist = np.loadtxt(opt.template_list,dtype='S')
@@ -225,7 +237,7 @@ one is used.''',type='int',default=1)
     #return 0
 
     logging.info('Starting sampler...')
-    M.sample(iter=20000,burn=10000,thin=100,verbose=0)#,verbose=-1),thin=3
+    M.sample(iter=3500,burn=500,thin=3,verbose=0)#,verbose=-1),thin=3
     #M.sample(iter=1000,burn=100,verbose=-1)
 #,tune_interval=1000,tune_throughout=True,verbose=0)
 
@@ -261,6 +273,28 @@ one is used.''',type='int',default=1)
 
     np.save(outfile,oarray)
 
+    mspec = M.spMod.modelSpec()
+    scale1 = M.spMod.scale[0]
+
+    M.spMod.scale[0] = 0.
+    mspec1 = M.spMod.modelSpec()
+
+    M.spMod.scale[0] = scale1
+    M.spMod.scale[1] = 0.
+    mspec2 = M.spMod.modelSpec()
+
+    sp_array = np.zeros(	len(mspec.x),
+				  dtype=[('wave', '<f8'), ('data', '<f8'), ('model', '<f8'),
+						 ('model1', '<f8') , ('model2', '<f8')])
+
+    sp_array['wave'] = mspec.x
+    sp_array['data'] = M.spMod.ospec.flux
+    sp_array['model'] = mspec.flux
+    sp_array['model1'] = mspec1.flux
+    sp_array['model2'] = mspec2.flux
+	
+    np.save(spname,sp_array)
+	
     py.subplot(241)
     hh,edges = np.histogram(oarray['scale'],range=[M.minlevel,M.maxlevel*1.2])
     width = np.mean(edges[1:]-edges[:-1])/2.
@@ -279,10 +313,13 @@ one is used.''',type='int',default=1)
     py.bar(edges[:-1]+0.1,hh+1e-3)
 
     py.subplot(212)
-    mspec = M.spMod.modelSpec()
-    py.plot(M.spMod.ospec.x,M.spMod.ospec.flux)
-    py.plot(mspec.x,mspec.flux)
+	
+    py.plot(M.spMod.ospec.x,M.spMod.ospec.flux,'0.8')
+    py.plot(mspec.x,mspec.flux,'k')
 
+    py.plot(mspec1.x,mspec1.flux,'r')
+    py.plot(mspec2.x,mspec2.flux,'b')
+	
     if opt.savefig:
         logging.info('Saving figure to %s'%(opt.output+'.png'))
         py.savefig(opt.output+'.png')

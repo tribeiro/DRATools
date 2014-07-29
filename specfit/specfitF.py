@@ -258,6 +258,13 @@ Calculate model spectra.
 
 		_model.flux*=self.scale[0]*self.templateScale[0][self.ntemp[0]]
 		_model.x *= np.sqrt((1.0 + self.vel[0]/_c_kms)/(1. - self.vel[0]/_c_kms))
+		
+		logging.debug('Applying instrument signature')
+		
+		kernel = self.obsRes()/np.mean(_model.x[1:]-_model.x[:-1])
+		
+		_model.flux = scipy.ndimage.filters.gaussian_filter(_model.flux,kernel)
+
 
 		for i in range(1,self.nspec):
 
@@ -265,6 +272,13 @@ Calculate model spectra.
 								self.template[i][self.ntemp[i]].flux)
 								
 			tmp.x *= np.sqrt((1.0 + self.vel[i]/_c_kms)/(1. - self.vel[i]/_c_kms))
+			
+			logging.debug('Applying instrument signature')
+			
+			kernel = self.obsRes()/np.mean(tmp.x[1:]-tmp.x[:-1])
+			
+			tmp.flux = scipy.ndimage.filters.gaussian_filter(tmp.flux,kernel)
+			
 			tmp = spec.Spectrum(*tmp.resample(_model.x,replace=False))
 			
 			_model.flux += self.scale[1]*tmp.flux*self.templateScale[i][self.ntemp[i]]
@@ -272,11 +286,6 @@ Calculate model spectra.
 		if not _model.isLinear():
 			logging.warning('Data must be linearized...')
 			
-		logging.debug('Applying instrument signature')
-		
-		kernel = self.obsRes()/np.mean(_model.x[1:]-_model.x[:-1])
-		
-		_model.flux = scipy.ndimage.filters.gaussian_filter(_model.flux,kernel)
 		
 		logging.debug('Resampling model spectra')
 		_model = spec.Spectrum(*_model.resample(self.ospec.x,replace=False))

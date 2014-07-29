@@ -22,6 +22,7 @@
 		F1691511192FD22F0049BDDB /* get_Teff_logg.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = get_Teff_logg.py; path = specfit/get_Teff_logg.py; sourceTree = "<group>"; };
 		F16AE2AA1575B25F00175EB1 /* gdefringe.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = gdefringe.py; path = SOAR/goodman/gdefringe.py; sourceTree = "<group>"; };
 		F16AE2BE1576E89B00175EB1 /* gdefringeF.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = gdefringeF.py; path = SOAR/goodman/gdefringeF.py; sourceTree = "<group>"; };
+		F18630BF1981EF9300EF1BE2 /* gengrid_nextgen.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = gengrid_nextgen.py; path = specfit/gengrid_nextgen.py; sourceTree = "<group>"; };
 		F1968EBD188079D100B50350 /* sland.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = sland.sh; sourceTree = "<group>"; };
 		F198D17018F3224900B9798F /* specfitMC.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = specfitMC.py; path = specfit/specfitMC.py; sourceTree = "<group>"; };
 		F1C713CB191E7DB100341D5C /* hierachdits.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = hierachdits.py; sourceTree = "<group>"; };
@@ -88,6 +89,7 @@
 				F198D17018F3224900B9798F /* specfitMC.py */,
 				F1D8A8B518E3BF0300693FF4 /* __init__.py */,
 				F1D8A8B418E3BE0400693FF4 /* specfit_v0.py */,
+				F18630BF1981EF9300EF1BE2 /* gengrid_nextgen.py */,
 				F1D8A8B718E98C1800693FF4 /* mkobsspec.py */,
 				F1D8A8B818EB658500693FF4 /* dk2npy.py */,
 				F1DBF70A195A41EB004B88B3 /* ngen2npy.py */,
