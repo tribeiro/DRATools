@@ -104,7 +104,10 @@ component ncomp.
 		
 		if self.grid_ndim[ncomp] > 0:
 			grid = splist[1:self.grid_ndim[ncomp]+1]
-			index = np.arange(len(splist[0])).reshape((len(np.unique(grid[0])),len(np.unique(grid[1]))))
+			gdim = np.zeros(self.grid_ndim[ncomp])
+			for i in range(len(grid)):
+				gdim[i] = len(np.unique(grid[i]))
+			index = np.arange(len(splist[0])).reshape(gdim)
 			self.Grid[ncomp] = index
 
 		logging.debug('Loading template spectra for component %i from %s[%i]'%(ncomp,filename,len(splist)))

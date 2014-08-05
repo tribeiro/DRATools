@@ -41,6 +41,9 @@ def main(argv):
 				'-0.5a+0.2',
 				'-1.0a+0.4',
 				'-1.5a+0.4']
+
+	mhalpha = [ '-1.0a+0.4']
+
 	nfail = 0
 	nfiles = 0
 

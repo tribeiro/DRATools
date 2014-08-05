@@ -46,7 +46,7 @@ C - Tiago Ribeiro
 	# Load template spectra, for each component as Picke files
 
 	spMod.grid_ndim[0] = 2 # Set grid dimension for 1st component
-	spMod.grid_ndim[1] = 3 # Set grid dimension for 2nd component
+	spMod.grid_ndim[1] = 2 # Set grid dimension for 2nd component
 
 	for i in range(ncomp):
 		if temptype == 1:
@@ -78,8 +78,9 @@ C - Tiago Ribeiro
 	min,val,max = np.zeros(ncomp)-600.,np.zeros(ncomp),np.zeros(ncomp)+600.
 	velocity = pymc.Uniform('velocity', min, max , val ,size=ncomp)
 
-	gridmin = np.zeros(ncomp*np.sum(spMod.grid_ndim),dtype=int)
-	gridmax = np.zeros(ncomp*np.sum(spMod.grid_ndim),dtype=int)
+	gridmin = np.zeros(np.sum(spMod.grid_ndim),dtype=int)
+	gridmax = np.zeros(np.sum(spMod.grid_ndim),dtype=int)
+	
 	for i in range(ncomp):
 		logging.debug('gridmax: %i %i %i %i'%(i*2,i*2+1,
 											  len(spMod.Grid[i])-1,
@@ -92,7 +93,7 @@ C - Tiago Ribeiro
 		
 	template = pymc.DiscreteUniform('template', lower=gridmin, upper=gridmax,
                                     value=val,
-									size=ncomp*np.sum(spMod.grid_ndim))
+									size=np.sum(spMod.grid_ndim))
 	# Prepare PyMC deterministic variables
 	
 	@pymc.deterministic
@@ -124,7 +125,7 @@ C - Tiago Ribeiro
 def main(argv):
 
     logging.basicConfig(format='%(levelname)s:%(asctime)s::%(message)s',
-                        level=logging.DEBUG)
+                        level=logging.INFO)
 
     from optparse import OptionParser
 	
@@ -237,7 +238,7 @@ one is used.''',type='int',default=1)
     #return 0
 
     logging.info('Starting sampler...')
-    M.sample(iter=3500,burn=500,thin=3,verbose=0)#,verbose=-1),thin=3
+    M.sample(iter=20000,burn=10000,thin=1,verbose=0)#,verbose=-1),thin=3
     #M.sample(iter=1000,burn=100,verbose=-1)
 #,tune_interval=1000,tune_throughout=True,verbose=0)
 

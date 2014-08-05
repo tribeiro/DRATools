@@ -1,7 +1,7 @@
 #! /usr/bin/env
 
 '''
-	Convert NextGen files to numpy.
+	Cut spectrum (stored as .npy files).
 '''
 
 import sys,os
@@ -31,22 +31,18 @@ def main(argv):
 		log.basicConfig(level=log.INFO)
 
 	for fname in args[1:]:
-		sp = np.loadtxt(fname,unpack=True,usecols=(0,1),
-						converters={0:lambda s: float(s.replace('D','e')),
-									1:lambda s: float(s.replace('D','e'))})
-		asort = sp[0].argsort()
+		sp = np.load(fname)
 
-		rsp = np.array([sp[0][asort],10**(sp[1][asort])+8.0])
-
-		mask = np.zeros(len(rsp[0]))
+		mask = np.zeros(len(sp[0])) == 0
 		if opt.wmin:
-			mask = np.bitwise_and(mask,mask < opt.wmin)
+			mask = np.bitwise_and(mask,sp[0] > opt.wmin)
 		if opt.wmax:
-			mask = np.bitwise_and(mask,mask > opt.wmax)
+			mask = np.bitwise_and(mask,sp[0] < opt.wmax)
 
-		rsp = np.array([rsp[0][mask],sp[1][mask]])
+		rsp = np.array([sp[0][mask],sp[1][mask]])
 
-		ofile = fname+'.npy'
+		ofile = 'c_'+fname
+
 		log.info('%s -> %s'%(fname,ofile))
 		np.save(ofile,rsp)
 
