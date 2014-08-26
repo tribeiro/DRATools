@@ -12,6 +12,7 @@
 		F139C88818627C8100C228A7 /* eclmap.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = eclmap.py; sourceTree = "<group>"; };
 		F139C8891863799800C228A7 /* eclmapF.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = eclmapF.py; sourceTree = "<group>"; };
 		F139C88A18638E6500C228A7 /* clmin.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = clmin.py; sourceTree = "<group>"; };
+		F148483F19A8C87300B4B281 /* varplot.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = varplot.py; path = variability/varplot.py; sourceTree = "<group>"; };
 		F16473121868D86F003B308D /* clmin_MC.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = clmin_MC.py; sourceTree = "<group>"; };
 		F16473131868D8E2003B308D /* clminF.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = clminF.py; sourceTree = "<group>"; };
 		F1647314186A218A003B308D /* pdm_MC.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = pdm_MC.py; sourceTree = "<group>"; };
@@ -40,14 +41,25 @@
 		F1DF7B581847AFF8006E6E02 /* psim_tst01.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = psim_tst01.py; sourceTree = "<group>"; };
 		F1DF7B591847D3DE006E6E02 /* psim_tst02.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = psim_tst02.py; sourceTree = "<group>"; };
 		F1DF7B5A1847D3F6006E6E02 /* psimF.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = psimF.py; sourceTree = "<group>"; };
+		F1E060441996574A00785B00 /* stardens.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = stardens.py; sourceTree = "<group>"; };
 		F1ED28A7185F771C00B7EB8F /* cluz.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = cluz.py; sourceTree = "<group>"; };
 		F1F8F59018D8AC6C006B551B /* trailedspec2.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = trailedspec2.py; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		F148483E19A8C84A00B4B281 /* variability */ = {
+			isa = PBXGroup;
+			children = (
+				F148483F19A8C87300B4B281 /* varplot.py */,
+			);
+			name = variability;
+			sourceTree = "<group>";
+		};
 		F16AE2A11575B19100175EB1 = {
 			isa = PBXGroup;
 			children = (
+				F148483E19A8C84A00B4B281 /* variability */,
+				F1E060431996570300785B00 /* benchmark */,
 				F1DBF710196879D6004B88B3 /* UXUma */,
 				F1DBF70E19684975004B88B3 /* UGem */,
 				F1ED28A5185F76CF00B7EB8F /* CAL87 */,
@@ -127,6 +139,14 @@
 				F1DF7B5A1847D3F6006E6E02 /* psimF.py */,
 			);
 			name = activity;
+			sourceTree = "<group>";
+		};
+		F1E060431996570300785B00 /* benchmark */ = {
+			isa = PBXGroup;
+			children = (
+				F1E060441996574A00785B00 /* stardens.py */,
+			);
+			name = benchmark;
 			sourceTree = "<group>";
 		};
 		F1ED28A5185F76CF00B7EB8F /* CAL87 */ = {

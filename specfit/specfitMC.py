@@ -46,7 +46,7 @@ C - Tiago Ribeiro
 	# Load template spectra, for each component as Picke files
 
 	spMod.grid_ndim[0] = 2 # Set grid dimension for 1st component
-	spMod.grid_ndim[1] = 2 # Set grid dimension for 2nd component
+	spMod.grid_ndim[1] = 3 # Set grid dimension for 2nd component
 
 	for i in range(ncomp):
 		if temptype == 1:
@@ -85,12 +85,13 @@ C - Tiago Ribeiro
 		logging.debug('gridmax: %i %i %i %i'%(i*2,i*2+1,
 											  len(spMod.Grid[i])-1,
 											  len(spMod.Grid[i][0])-1))
-		gridmax[i*2] = len(spMod.Grid[i])-1
-		gridmax[i*2+1] = len(spMod.Grid[i][0])-1
+		for j in range(spMod.grid_ndim[i]):
+			gridmax[i*2+j] = spMod.Grid[i].shape[j]-1
+		#gridmax[i*2+1] = len(spMod.Grid[i][0])-1
 
 	#max = np.array([len(spMod.template[i])-1 for i in range(ncomp)],dtype=int)
 	val = gridmax/2
-		
+
 	template = pymc.DiscreteUniform('template', lower=gridmin, upper=gridmax,
                                     value=val,
 									size=np.sum(spMod.grid_ndim))
@@ -100,15 +101,24 @@ C - Tiago Ribeiro
 	def spModel(scales=scales,velocity=velocity,template=template):
 		logging.debug('spModel: len(spMod.Grid) = %i'%(len(spMod.Grid)))
 		logging.debug('spModel: Ncomp   Scale   Vel temp1 temp2 lenGrid[0] lenGrid[1]')
-		for i in range(len(scales)):
-			logging.debug('spModel: %5i %5.1e %5.1f %5i %5i %10i %10i'%(i,scales[i],
-														   velocity[i],
-                                                     template[i*2],template[i*2+1],
-													 len(spMod.Grid[i]),
-													 len(spMod.Grid[i][0])))
-			spMod.scale[i] = scales[i]
-			spMod.vel[i] = velocity[i]
-			spMod.ntemp[i] = spMod.Grid[i][template[i*2]][template[i*2+1]]
+		strlog = "spModel: "
+
+		for idx in range(len(scales)):
+		
+			strlog += '%5i %5.1e %5.1f '%(idx,scales[idx],
+										  velocity[idx])
+			
+			spMod.scale[idx] = scales[idx]
+			spMod.vel[idx] = velocity[idx]
+			index = np.zeros(spMod.grid_ndim[idx],dtype=int)
+			for iidx in range(spMod.grid_ndim[idx]):
+				strlog += '%5i '%template[idx*2+iidx]
+				index[iidx] = template[idx*2+iidx]
+			spMod.ntemp[idx] = spMod.Grid[idx].item(*index)
+			
+			logging.debug(strlog)
+			strlog = "spModel: "
+			
 		modspec = spMod.modelSpec()
 		return modspec.flux
 
@@ -238,7 +248,7 @@ one is used.''',type='int',default=1)
     #return 0
 
     logging.info('Starting sampler...')
-    M.sample(iter=20000,burn=10000,thin=1,verbose=0)#,verbose=-1),thin=3
+    M.sample(iter=40000,burn=30000,thin=1,verbose=0)#,verbose=-1),thin=3
     #M.sample(iter=1000,burn=100,verbose=-1)
 #,tune_interval=1000,tune_throughout=True,verbose=0)
 

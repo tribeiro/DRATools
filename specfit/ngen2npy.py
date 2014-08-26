@@ -44,7 +44,7 @@ def main(argv):
 		if opt.wmax:
 			mask = np.bitwise_and(mask,mask > opt.wmax)
 
-		rsp = np.array([rsp[0][mask],sp[1][mask]])
+		rsp = np.array([rsp[0],sp[1])
 
 		ofile = fname+'.npy'
 		log.info('%s -> %s'%(fname,ofile))
