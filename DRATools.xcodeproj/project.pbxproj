@@ -9,6 +9,13 @@
 /* Begin PBXFileReference section */
 		F116DFB81893033C00830374 /* cl_all.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = cl_all.py; sourceTree = "<group>"; };
 		F12D203218C6601F0044FAF4 /* fix_outofeclipse.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = fix_outofeclipse.py; sourceTree = "<group>"; };
+		F137AA8019AF568C007D4B71 /* varlook.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = varlook.py; path = variability/varlook.py; sourceTree = "<group>"; };
+		F137AA8119AF590F007D4B71 /* vartool.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = vartool.py; path = variability/vartool.py; sourceTree = "<group>"; };
+		F137AA8219AF5D45007D4B71 /* foo.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = foo.py; path = variability/foo.py; sourceTree = "<group>"; };
+		F137AA8319AF6937007D4B71 /* plotcanvas.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = plotcanvas.py; path = variability/plotcanvas.py; sourceTree = "<group>"; };
+		F137AA8519AF888E007D4B71 /* __init__.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = __init__.py; path = variability/__init__.py; sourceTree = "<group>"; };
+		F137AA8619AF88CC007D4B71 /* vtmodel.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = vtmodel.py; path = variability/vtmodel.py; sourceTree = "<group>"; };
+		F137AA8719B0E290007D4B71 /* html2fits.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = html2fits.py; path = specfit/html2fits.py; sourceTree = "<group>"; };
 		F139C88818627C8100C228A7 /* eclmap.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = eclmap.py; sourceTree = "<group>"; };
 		F139C8891863799800C228A7 /* eclmapF.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = eclmapF.py; sourceTree = "<group>"; };
 		F139C88A18638E6500C228A7 /* clmin.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = clmin.py; sourceTree = "<group>"; };
@@ -51,6 +58,12 @@
 			isa = PBXGroup;
 			children = (
 				F148483F19A8C87300B4B281 /* varplot.py */,
+				F137AA8019AF568C007D4B71 /* varlook.py */,
+				F137AA8119AF590F007D4B71 /* vartool.py */,
+				F137AA8519AF888E007D4B71 /* __init__.py */,
+				F137AA8319AF6937007D4B71 /* plotcanvas.py */,
+				F137AA8619AF88CC007D4B71 /* vtmodel.py */,
+				F137AA8219AF5D45007D4B71 /* foo.py */,
 			);
 			name = variability;
 			sourceTree = "<group>";
@@ -103,6 +116,7 @@
 				F1D8A8B518E3BF0300693FF4 /* __init__.py */,
 				F1D8A8B418E3BE0400693FF4 /* specfit_v0.py */,
 				F18630BF1981EF9300EF1BE2 /* gengrid_nextgen.py */,
+				F137AA8719B0E290007D4B71 /* html2fits.py */,
 				F1D8A8B718E98C1800693FF4 /* mkobsspec.py */,
 				F1D8A8B818EB658500693FF4 /* dk2npy.py */,
 				F1DBF70A195A41EB004B88B3 /* ngen2npy.py */,

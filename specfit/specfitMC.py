@@ -248,8 +248,8 @@ one is used.''',type='int',default=1)
     #return 0
 
     logging.info('Starting sampler...')
-    M.sample(iter=40000,burn=30000,thin=1,verbose=0)#,verbose=-1),thin=3
-    #M.sample(iter=1000,burn=100,verbose=-1)
+    M.sample(iter=50000,burn=40000,thin=1,verbose=0)#,verbose=-1),thin=3
+    #M.sample(iter=200,burn=100,verbose=-1)
 #,tune_interval=1000,tune_throughout=True,verbose=0)
 
     logging.info('Sampler done. Saving results...')
@@ -273,14 +273,33 @@ one is used.''',type='int',default=1)
     grid = np.array(M.trace('template')[:]).reshape(2,-1)
 
     oarray = np.zeros(	len(M.trace('scale')[:]),
-                        dtype=[('scale', '<f8'), ('velocity', '<f8'),
-                               ('temp1', '<i4') , ('temp2', '<i4')])
+                        dtype=[('scale1', '<f8'), ('vel1', '<f8'),
+							   ('scale2', '<f8'), ('vel2', '<f8'),
+							   ('tempscale1', '<f8'), ('tempscale2', '<f8'),
+                               ('temp1_1', '<i4') , ('temp1_2', '<i4'),
+							   ('temp2_1', '<i4') , ('temp2_2', '<i4'),
+							   ('temp2_3', '<i4') , ('sig', '<f8')])
 
 
-    oarray['scale'] = np.array(	[i[0] for i in M.trace('scale')[:]] )
-    oarray['velocity'] = np.array(	[i[0] for i in M.trace('velocity')[:]] )
-    oarray['temp1'] = np.array(	[i[0] for i in M.trace('template')[:]] )
-    oarray['temp2'] = np.array(	[i[1] for i in M.trace('template')[:]] )
+    oarray['scale1'] = np.array(	[i[0] for i in M.trace('scale')[:]] )
+    oarray['scale2'] = np.array(	[i[1] for i in M.trace('scale')[:]] )
+    oarray['vel1'] = np.array(	[i[0] for i in M.trace('velocity')[:]] )
+    oarray['vel2'] = np.array(	[i[1] for i in M.trace('velocity')[:]] )
+    oarray['temp1_1'] = np.array(	[i[0] for i in M.trace('template')[:]] )
+    oarray['temp1_2'] = np.array(	[i[1] for i in M.trace('template')[:]] )
+    oarray['temp2_1'] = np.array(	[i[2] for i in M.trace('template')[:]] )
+    oarray['temp2_2'] = np.array(	[i[3] for i in M.trace('template')[:]] )
+    oarray['temp2_3'] = np.array(	[i[4] for i in M.trace('template')[:]] )
+    oarray['sig'] = np.array(	[i for i in M.trace('sig')[:]] )
+	
+    for idx in range(2):
+		for icomp in range(len(oarray['temp1_1'])):
+			index = np.zeros(M.spMod.grid_ndim[idx],dtype=int)
+			for iidx in range(M.spMod.grid_ndim[idx]):
+				index[iidx] = oarray['temp%i_%i'%(idx+1,iidx+1)][icomp]
+			ntemp = M.spMod.Grid[idx].item(*index)
+			oarray['tempscale%i'%(idx+1)][icomp] = M.spMod.templateScale[idx][ntemp]
+
 
     np.save(outfile,oarray)
 
@@ -307,20 +326,25 @@ one is used.''',type='int',default=1)
     np.save(spname,sp_array)
 	
     py.subplot(241)
-    hh,edges = np.histogram(oarray['scale'],range=[M.minlevel,M.maxlevel*1.2])
+    hh,edges = np.histogram(oarray['scale1'],range=[M.minlevel,M.maxlevel*1.2])
+    width = np.mean(edges[1:]-edges[:-1])/2.
+    py.bar(edges[:-1],hh+1e-3,width=width)
+
+    hh,edges = np.histogram(oarray['scale2'],range=[M.minlevel,M.maxlevel*1.2])
     width = np.mean(edges[1:]-edges[:-1])/2.
     py.bar(edges[:-1],hh+1e-3,width=width)
 
     py.subplot(242)
-    py.hist(oarray['velocity'])
-
+    py.hist(oarray['vel1'])
+    py.hist(oarray['vel2'])
+	
     py.subplot(243)
 
-    hh,edges = np.histogram(oarray['temp1'],bins=np.arange(-0.5,M.gridmax[0]))
+    hh,edges = np.histogram(oarray['temp1_1'],bins=np.arange(-0.5,M.gridmax[0]))
     py.bar(edges[:-1]+0.1,hh+1e-3)
 
     py.subplot(244)
-    hh,edges = np.histogram(oarray['temp2'],bins=np.arange(-0.5,M.gridmax[1]))
+    hh,edges = np.histogram(oarray['temp1_2'],bins=np.arange(-0.5,M.gridmax[1]))
     py.bar(edges[:-1]+0.1,hh+1e-3)
 
     py.subplot(212)
