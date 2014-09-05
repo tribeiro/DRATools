@@ -191,7 +191,7 @@ one is used.''',type='int',default=1)
             index+=1
             logging.debug('%s'%dbname)
 
-        logging.info('dbname: %s'%dbname)
+	logging.info('dbname: %s'%dbname)
     if opt.no_overwrite and os.path.exists(spname):
         logging.debug('File %s exists (running on "no overwrite" mode).'%spname)
         index = 0
@@ -201,9 +201,21 @@ one is used.''',type='int',default=1)
             index+=1
             logging.debug('%s'%spname)
 
-        logging.info('spname: %s'%spname)
+	logging.info('spname: %s'%spname)
 
-	logging.info('Preparing model...')
+    if opt.no_overwrite and os.path.exists(outfile):
+        logging.debug('File %s exists (running on "no overwrite" mode).'%outfile)
+        index = 0
+        outroot = outfile[:opt.filename.rfind('.')]
+        outfile = outroot + '.%04i.npy'%index
+        while os.path.exists(outfile):
+            outfile = outroot + '.%04i.npy'%index
+            index+=1
+            logging.debug('%s'%outfile)
+
+    logging.info('outfile: %s'%outfile)
+
+    logging.info('Preparing model...')
 	
     if opt.n_comp > 1:
 		tlist = np.loadtxt(opt.template_list,dtype='S')
@@ -248,8 +260,8 @@ one is used.''',type='int',default=1)
     #return 0
 
     logging.info('Starting sampler...')
-    M.sample(iter=50000,burn=40000,thin=1,verbose=0)#,verbose=-1),thin=3
-    #M.sample(iter=200,burn=100,verbose=-1)
+    #M.sample(iter=50000,burn=40000,thin=3,verbose=0)#,verbose=-1),thin=3
+    M.sample(iter=200,burn=100,verbose=-1)
 #,tune_interval=1000,tune_throughout=True,verbose=0)
 
     logging.info('Sampler done. Saving results...')
@@ -270,7 +282,7 @@ one is used.''',type='int',default=1)
 
     M.write_csv(dbname,variables=['scale','velocity','template','sig'])
 	
-    grid = np.array(M.trace('template')[:]).reshape(2,-1)
+    #grid = np.array(M.trace('template')[:]).reshape(2,-1)
 
     oarray = np.zeros(	len(M.trace('scale')[:]),
                         dtype=[('scale1', '<f8'), ('vel1', '<f8'),

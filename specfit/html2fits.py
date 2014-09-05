@@ -56,13 +56,13 @@ def main(argv):
 
 	cols = pyfits.ColDefs(colData)
 
-	tbhdu = pyfits.BinTableHDU.from_columns(cols)
+	tbhdu = pyfits.new_table(cols)
 
-	prihdu = pyfits.PrimaryHDU(n)
+	prihdu = pyfits.PrimaryHDU()
 
 	thdulist = pyfits.HDUList([prihdu, tbhdu])
 
-	hdulist.writeto(opt.filename.replace('.html','.fits'))
+	thdulist.writeto(opt.filename.replace('.html','.fits'))
 
 ################################################################################
 
