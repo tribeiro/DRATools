@@ -20,6 +20,8 @@
 		F139C8891863799800C228A7 /* eclmapF.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = eclmapF.py; sourceTree = "<group>"; };
 		F139C88A18638E6500C228A7 /* clmin.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = clmin.py; sourceTree = "<group>"; };
 		F148483F19A8C87300B4B281 /* varplot.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = varplot.py; path = variability/varplot.py; sourceTree = "<group>"; };
+		F14A157419FEBA3D00519737 /* snr_calc.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = snr_calc.py; path = wdms_mr/snr_calc.py; sourceTree = "<group>"; };
+		F15A85B719EB0989001CAB67 /* mr_1.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = mr_1.py; path = wdms_mr/mr_1.py; sourceTree = "<group>"; };
 		F16473121868D86F003B308D /* clmin_MC.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = clmin_MC.py; sourceTree = "<group>"; };
 		F16473131868D8E2003B308D /* clminF.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = clminF.py; sourceTree = "<group>"; };
 		F1647314186A218A003B308D /* pdm_MC.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = pdm_MC.py; sourceTree = "<group>"; };
@@ -68,9 +70,19 @@
 			name = variability;
 			sourceTree = "<group>";
 		};
+		F15A85B619EB0964001CAB67 /* wdms_mr */ = {
+			isa = PBXGroup;
+			children = (
+				F15A85B719EB0989001CAB67 /* mr_1.py */,
+				F14A157419FEBA3D00519737 /* snr_calc.py */,
+			);
+			name = wdms_mr;
+			sourceTree = "<group>";
+		};
 		F16AE2A11575B19100175EB1 = {
 			isa = PBXGroup;
 			children = (
+				F15A85B619EB0964001CAB67 /* wdms_mr */,
 				F148483E19A8C84A00B4B281 /* variability */,
 				F1E060431996570300785B00 /* benchmark */,
 				F1DBF710196879D6004B88B3 /* UXUma */,

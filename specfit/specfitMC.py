@@ -260,8 +260,8 @@ one is used.''',type='int',default=1)
     #return 0
 
     logging.info('Starting sampler...')
-    #M.sample(iter=50000,burn=40000,thin=3,verbose=0)#,verbose=-1),thin=3
-    M.sample(iter=200,burn=100,verbose=-1)
+    M.sample(iter=50000,burn=40000,thin=3,verbose=0)#,verbose=-1),thin=3
+    #M.sample(iter=200,burn=100,verbose=-1)
 #,tune_interval=1000,tune_throughout=True,verbose=0)
 
     logging.info('Sampler done. Saving results...')
