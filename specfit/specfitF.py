@@ -218,7 +218,8 @@ Load the observed spectra.
 		sp = pyfits.open(filename)
 
 		self.ospec = spec.Spectrum(	10**(sp[1].data['loglam']),
-									sp[1].data['flux'])
+									sp[1].data['flux'],
+								   sp[1].data['ivar'])
 
 		if linearize and not self.ospec.isLinear():
 			logging.debug('Linearizing observed spectra')
