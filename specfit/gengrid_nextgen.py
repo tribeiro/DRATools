@@ -33,7 +33,8 @@ def main(argv):
 	grid = np.array([os.path.basename(g) for g in grid])
 	rootname = 'lte%03i%+4.1f%s.BT-NextGen.7.bz2.npy'
 
-	teff = np.arange(26,71,1)
+	#teff = np.arange(26,71,1)
+	teff = np.arange(26,51,1)
 	logg = np.arange(0.,5.5,0.5)
 	mhalpha = [ '-0.0a+0.0',
 				'+0.3a+0.0',
@@ -47,6 +48,8 @@ def main(argv):
 	mhalpha = [ '-0.0a+0.0','-1.0a+0.4','-3.0a+0.4' ]
 
 	mhalpha = [ '-0.0a+0.0','-0.5a+0.2','-1.0a+0.4']
+
+	mhalpha = [ '-0.0a+0.0','-1.0a+0.4','-2.0a+0.4','-3.0a+0.4']
 	
 	nfail = 0
 	nfiles = 0

@@ -4,7 +4,8 @@ import os,sys
 import numpy as np
 import pylab as py
 import logging as log
-import pymc
+#import pymc
+from astropy.table import Table
 
 ################################################################################
 
@@ -24,24 +25,23 @@ def main(argv):
 
 	hist = np.zeros(131*21).reshape(131,21)
 	
-	for pickle in args[1:]:
-		log.info('Reading in %s...'%(pickle))
-		db = pymc.database.pickle.load(pickle)
-		oarray = np.zeros(len(db.trace('scale')[:]),
-						  dtype=dtype)
-		oarray['scale'] = np.array(	[i[0] for i in db.trace('scale')[:]] )
-		oarray['velocity'] = np.array(	[i[0] for i in db.trace('velocity')[:]] )
-		oarray['temp1'] = np.array(	[i[0] for i in db.trace('template')[:]] )
-		oarray['temp2'] = np.array(	[i[1] for i in db.trace('template')[:]] )
-		h2d,xx,yy = np.histogram2d(oarray['temp1'],oarray['temp2'],
-								   bins=( np.arange(-1,131) , np.arange(-1,21)))
-		hist += h2d
-		#py.plot(oarray['temp1'],oarray['temp2'],'.')
+	ax1 = py.subplot(221)
+	ax2 = py.subplot(222)
+	ax3 = py.subplot(223)
+	ax4 = py.subplot(224)
+	
+	for csv in args[1:]:
+		log.info('Reading in %s...'%(csv))
+		data = Table.read(csv,format='ascii')
+		try:
+			ax1.errorbar(data['Mean'][0],data['Mean'][1],data['MC Error'][0],data['MC Error'][1],fmt='b.')
+			ax2.errorbar(data['Mean'][2],data['Mean'][3],data['MC Error'][2],data['MC Error'][3],fmt='b.')
+			ax3.errorbar(data['Mean'][4],data['Mean'][5],data['MC Error'][4],data['MC Error'][5],fmt='b.')
+			ax4.errorbar(data['Mean'][7],data['Mean'][8],data['MC Error'][7],data['MC Error'][8],fmt='b.')
+		except:
+			pass
 
-	py.imshow(hist,
-			  interpolation='nearest',
-			  aspect='auto',
-			  origin='lower')
+	py.show()
 	#py.xlim(-1,45)
 	#py.ylim(-1,12)
 	py.show()

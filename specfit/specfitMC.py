@@ -46,7 +46,7 @@ C - Tiago Ribeiro
 	# Load template spectra, for each component as Picke files
 
 	spMod.grid_ndim[0] = 2 # Set grid dimension for 1st component
-	spMod.grid_ndim[1] = 3 # Set grid dimension for 2nd component
+	spMod.grid_ndim[1] = 2 # Set grid dimension for 2nd component
 
 	for i in range(ncomp):
 		if temptype == 1:
@@ -123,8 +123,16 @@ C - Tiago Ribeiro
 		return modspec.flux
 
 	mflux = np.mean(spMod.ospec.flux)
-	sig = pymc.Uniform('sig', mflux/100., mflux/10., value=mflux/50.)
-	y = pymc.Normal('y', mu=spModel, tau=1.0/sig**2, value=spMod.ospec.flux,
+	#sig = pymc.Uniform('sig',
+	#				   np.min(spMod.ospec.err),
+	#				   np.max(spMod.ospec.err),
+	#				   value=np.median(spMod.ospec.err))
+	err = spMod.ospec.err
+	mask = spMod.ospec.x < 5000.
+	err[mask] = spMod.ospec.err[mask]/10.
+	y = pymc.Normal('y', mu=spModel,
+					tau=1./err,
+					value=spMod.ospec.flux,
                     observed=True)
 
 	return locals()
@@ -260,8 +268,10 @@ one is used.''',type='int',default=1)
     #return 0
 
     logging.info('Starting sampler...')
-    M.sample(iter=50000,burn=40000,thin=3,verbose=0)#,verbose=-1),thin=3
-    #M.sample(iter=200,burn=100,verbose=-1)
+    #M.sample(iter=70000,burn=40000,thin=3,verbose=0)#,verbose=-1),thin=3
+    M.sample(iter=40000,burn=10000,thin=3,
+			tune_interval=500,tune_throughout=True,
+			verbose=0)
 #,tune_interval=1000,tune_throughout=True,verbose=0)
 
     logging.info('Sampler done. Saving results...')
@@ -280,7 +290,7 @@ one is used.''',type='int',default=1)
 		
         logging.info('csvname: %s'%dbname)
 
-    M.write_csv(dbname,variables=['scale','velocity','template','sig'])
+    M.write_csv(dbname,variables=['scale','velocity','template'])
 	
     #grid = np.array(M.trace('template')[:]).reshape(2,-1)
 
@@ -301,8 +311,8 @@ one is used.''',type='int',default=1)
     oarray['temp1_2'] = np.array(	[i[1] for i in M.trace('template')[:]] )
     oarray['temp2_1'] = np.array(	[i[2] for i in M.trace('template')[:]] )
     oarray['temp2_2'] = np.array(	[i[3] for i in M.trace('template')[:]] )
-    oarray['temp2_3'] = np.array(	[i[4] for i in M.trace('template')[:]] )
-    oarray['sig'] = np.array(	[i for i in M.trace('sig')[:]] )
+    #oarray['temp2_3'] = np.array(	[i[4] for i in M.trace('template')[:]] )
+    #oarray['sig'] = np.array(	[i for i in M.trace('sig')[:]] )
 	
     for idx in range(2):
 		for icomp in range(len(oarray['temp1_1'])):

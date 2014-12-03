@@ -219,7 +219,7 @@ Load the observed spectra.
 
 		self.ospec = spec.Spectrum(	10**(sp[1].data['loglam']),
 									sp[1].data['flux'],
-								   sp[1].data['ivar'])
+								    1./sp[1].data['ivar'])
 
 		if linearize and not self.ospec.isLinear():
 			logging.debug('Linearizing observed spectra')
