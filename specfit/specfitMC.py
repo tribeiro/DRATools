@@ -185,7 +185,7 @@ one is used.''',type='int',default=1)
 
     dfile = opt.filename
     outfile = opt.output
-    outroot = opt.filename[:opt.filename.rfind('.')]
+    outroot = opt.output[:opt.output.rfind('.')]
     tlist = [opt.grid]
 	
     dbname = outroot+'.pickle'
@@ -198,7 +198,9 @@ one is used.''',type='int',default=1)
             dbname = outroot + '.%04i.pickle'%index
             index+=1
             logging.debug('%s'%dbname)
-
+	fp = open(dbname,'w')
+	fp.close()
+	
 	logging.info('dbname: %s'%dbname)
     if opt.no_overwrite and os.path.exists(spname):
         logging.debug('File %s exists (running on "no overwrite" mode).'%spname)
@@ -208,6 +210,8 @@ one is used.''',type='int',default=1)
             spname = outroot + '.spres.%04i.npy'%index
             index+=1
             logging.debug('%s'%spname)
+	fp = open(spname,'w')
+	fp.close()
 
 	logging.info('spname: %s'%spname)
 
@@ -221,7 +225,25 @@ one is used.''',type='int',default=1)
             index+=1
             logging.debug('%s'%outfile)
 
+	fp = open(outfile,'w')
+	fp.close()
+
     logging.info('outfile: %s'%outfile)
+
+    csvname=outroot+'.csv'
+    if opt.no_overwrite and os.path.exists(csvname):
+        logging.debug('File %s exists (running on "no overwrite" mode).'%csvname)
+        index = 0
+        csvname = outroot + '.%04i.csv'%index
+        while os.path.exists(csvname):
+            csvname = outroot + '.%04i.csv'%index
+            index+=1
+            logging.debug('%s'%csvname)
+
+	fp = open(csvname,'w')
+	fp.close()
+
+	logging.info('csvname: %s'%csvname)
 
     logging.info('Preparing model...')
 	
@@ -277,20 +299,8 @@ one is used.''',type='int',default=1)
     logging.info('Sampler done. Saving results...')
 
     M.db.close()
-	
-    dbname=outroot+'.csv'
-    if opt.no_overwrite and os.path.exists(dbname):
-        logging.debug('File %s exists (running on "no overwrite" mode).'%dbname)
-        index = 0
-        dbname = outroot + '.%04i.csv'%index
-        while os.path.exists(dbname):
-            dbname = outroot + '.%04i.csv'%index
-            index+=1
-            logging.debug('%s'%dbname)
-		
-        logging.info('csvname: %s'%dbname)
 
-    M.write_csv(dbname,variables=['scale','velocity','template'])
+    M.write_csv(csvname,variables=['scale','velocity','template'])
 	
     #grid = np.array(M.trace('template')[:]).reshape(2,-1)
 
