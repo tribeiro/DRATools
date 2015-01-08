@@ -165,6 +165,18 @@ number of components to fit is larger than 1.'''
     parser.add_option('--n-comp',
 					help = '''The number of components to fit. By default only 
 one is used.''',type='int',default=1)
+	parser.add_option('--niter',
+					  help = "Number of iterations",
+					  type='int',default=10000)
+	parser.add_option('--burn',
+					  help = "Number of burn iterations",
+					  type='int',default=2500)
+	parser.add_option('--thin',
+					  help = "Number of sub-iterations for each iteration",
+					  type='int',default=3)
+	parser.add_option('--tune',
+					  help = "Number of iterations for tuning.",
+					  type='int',default=500)
     parser.add_option('--templatetype',
 					help = '''Type of template file. Choices are: 1 - Pickle,
 2 - SDSSFits, 3 - Coelho 2014 model spectra''',type='int',default=1)
@@ -291,8 +303,8 @@ one is used.''',type='int',default=1)
 
     logging.info('Starting sampler...')
     #M.sample(iter=70000,burn=40000,thin=3,verbose=0)#,verbose=-1),thin=3
-    M.sample(iter=40000,burn=10000,thin=3,
-			tune_interval=500,tune_throughout=True,
+    M.sample(iter=opt.niter,burn=opt.burn,thin=opt.thin,
+			tune_interval=opt.tune,tune_throughout=True,
 			verbose=0)
 #,tune_interval=1000,tune_throughout=True,verbose=0)
 

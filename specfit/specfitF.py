@@ -217,14 +217,19 @@ Load the observed spectra.
 		
 		sp = pyfits.open(filename)
 
-		self.ospec = spec.Spectrum(	10**(sp[1].data['loglam']),
-									sp[1].data['flux'],
-								    1./sp[1].data['ivar'])
+		mask = np.bitwise_and(sp[1].data['and_mask'] == 0,
+							  sp[1].data['or_mask'] == 0)
 
+		self.ospec = spec.Spectrum(	x=10**(sp[1].data['loglam'][mask]),
+									flux=sp[1].data['flux'][mask],
+								    ivar=sp[1].data['ivar'][mask])
+
+		'''
 		if linearize and not self.ospec.isLinear():
 			logging.debug('Linearizing observed spectra')
 			self.ospec.linearize()
 			logging.debug('Done')
+		'''
 		
 		return 0
 
@@ -257,39 +262,45 @@ Calculate model spectra.
 
 		logging.debug('Building model spectra')
 		
-		_model = spec.Spectrum(	self.template[0][self.ntemp[0]].x,
-								self.template[0][self.ntemp[0]].flux)
-
-		_model.flux*=self.scale[0]*self.templateScale[0][self.ntemp[0]]
-		_model.x *= np.sqrt((1.0 + self.vel[0]/_c_kms)/(1. - self.vel[0]/_c_kms))
+		dopCor = np.sqrt((1.0 + self.vel[0]/_c_kms)/(1. - self.vel[0]/_c_kms))
+		scale = self.scale[0]*self.templateScale[0][self.ntemp[0]]
 		
-		logging.debug('Applying instrument signature')
+		_model = spec.Spectrum(	self.template[0][self.ntemp[0]].x*dopCor,
+								self.template[0][self.ntemp[0]].flux*scale)
 		
-		kernel = self.obsRes()/np.mean(_model.x[1:]-_model.x[:-1])
+		#logging.debug('Applying instrument signature')
 		
-		_model.flux = scipy.ndimage.filters.gaussian_filter(_model.flux,kernel)
+		#kernel = self.obsRes()/np.mean(_model.x[1:]-_model.x[:-1])
+		
+		#_model.flux = scipy.ndimage.filters.gaussian_filter(_model.flux,kernel)
 
 
 		for i in range(1,self.nspec):
 
-			tmp = spec.Spectrum(self.template[i][self.ntemp[i]].x,
-								self.template[i][self.ntemp[i]].flux)
-								
-			tmp.x *= np.sqrt((1.0 + self.vel[i]/_c_kms)/(1. - self.vel[i]/_c_kms))
+			dopCor = np.sqrt((1.0 + self.vel[i]/_c_kms)/(1. - self.vel[i]/_c_kms))
+			scale = self.scale[i]*self.templateScale[i][self.ntemp[i]]
 			
-			logging.debug('Applying instrument signature')
+			tmp = spec.Spectrum(self.template[i][self.ntemp[i]].x*dopCor,
+								self.template[i][self.ntemp[i]].flux*scale)
 			
-			kernel = self.obsRes()/np.mean(tmp.x[1:]-tmp.x[:-1])
+			#logging.debug('Applying instrument signature')
 			
-			tmp.flux = scipy.ndimage.filters.gaussian_filter(tmp.flux,kernel)
+			#kernel = self.obsRes()/np.mean(tmp.x[1:]-tmp.x[:-1])
+			
+			#tmp.flux = scipy.ndimage.filters.gaussian_filter(tmp.flux,kernel)
 			
 			tmp = spec.Spectrum(*tmp.resample(_model.x,replace=False))
 			
-			_model.flux += self.scale[1]*tmp.flux*self.templateScale[i][self.ntemp[i]]
+			_model.flux += tmp.flux
 		
+		'''
 		if not _model.isLinear():
 			logging.warning('Data must be linearized...')
 			
+		'''
+		#kernel = self.obsRes()/tmp.getDx()/2./np.pi
+		
+		#_model.flux = scipy.ndimage.filters.gaussian_filter(_model.flux,kernel)
 		
 		logging.debug('Resampling model spectra')
 		_model = spec.Spectrum(*_model.resample(self.ospec.x,replace=False))
@@ -325,7 +336,7 @@ Normalize spectra against data in the wavelenght regions
 	##################################################################
 
 	def obsRes(self):
-		return np.mean(self.ospec.x[1:]-self.ospec.x[:-1])
+		return self.ospec.getDx()
 
 	##################################################################
 
