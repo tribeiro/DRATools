@@ -165,16 +165,16 @@ number of components to fit is larger than 1.'''
     parser.add_option('--n-comp',
 					help = '''The number of components to fit. By default only 
 one is used.''',type='int',default=1)
-	parser.add_option('--niter',
+    parser.add_option('--niter',
 					  help = "Number of iterations",
 					  type='int',default=10000)
-	parser.add_option('--burn',
+    parser.add_option('--burn',
 					  help = "Number of burn iterations",
 					  type='int',default=2500)
-	parser.add_option('--thin',
+    parser.add_option('--thin',
 					  help = "Number of sub-iterations for each iteration",
 					  type='int',default=3)
-	parser.add_option('--tune',
+    parser.add_option('--tune',
 					  help = "Number of iterations for tuning.",
 					  type='int',default=500)
     parser.add_option('--templatetype',
