@@ -195,19 +195,22 @@ one is used.''',type='int',default=1)
                       default=False)
     opt,args = parser.parse_args(argv)
 
+    threadId = os.getpid()
+	
     dfile = opt.filename
     outfile = opt.output
     outroot = opt.output[:opt.output.rfind('.')]
     tlist = [opt.grid]
-	
-    dbname = outroot+'.pickle'
-    spname = outroot+'.spres.npy'
+
+    outfile = outroot+'_%i.npy'%threadId
+    dbname = outroot+'_%i.pickle'%threadId
+    spname = outroot+'_%i.spres.npy'%threadId
     if opt.no_overwrite and os.path.exists(dbname):
         logging.debug('File %s exists (running on "no overwrite" mode).'%dbname)
         index = 0
-        dbname = outroot + '.%04i.pickle'%index
+        dbname = outroot + '_%i.%04i.pickle'%(threadId,index)
         while os.path.exists(dbname):
-            dbname = outroot + '.%04i.pickle'%index
+            dbname = outroot + '_%i.%04i.pickle'%(threadId,index)
             index+=1
             logging.debug('%s'%dbname)
 	fp = open(dbname,'w')
@@ -217,9 +220,9 @@ one is used.''',type='int',default=1)
     if opt.no_overwrite and os.path.exists(spname):
         logging.debug('File %s exists (running on "no overwrite" mode).'%spname)
         index = 0
-        spname = outroot + '.spres.%04i.npy'%index
+        spname = outroot + '_%i.spres.%04i.npy'%(threadId,index)
         while os.path.exists(spname):
-            spname = outroot + '.spres.%04i.npy'%index
+            spname = outroot + '_%i.spres.%04i.npy'%(threadId,index)
             index+=1
             logging.debug('%s'%spname)
 	fp = open(spname,'w')
@@ -231,9 +234,9 @@ one is used.''',type='int',default=1)
         logging.debug('File %s exists (running on "no overwrite" mode).'%outfile)
         index = 0
         outroot = outfile[:opt.filename.rfind('.')]
-        outfile = outroot + '.%04i.npy'%index
+        outfile = outroot + '_%i.%04i.npy'%(threadId,index)
         while os.path.exists(outfile):
-            outfile = outroot + '.%04i.npy'%index
+            outfile = outroot + '_%i.%04i.npy'%(threadId,index)
             index+=1
             logging.debug('%s'%outfile)
 
@@ -242,13 +245,13 @@ one is used.''',type='int',default=1)
 
     logging.info('outfile: %s'%outfile)
 
-    csvname=outroot+'.csv'
+    csvname=outroot+'_%i.csv'%(threadId)
     if opt.no_overwrite and os.path.exists(csvname):
         logging.debug('File %s exists (running on "no overwrite" mode).'%csvname)
         index = 0
-        csvname = outroot + '.%04i.csv'%index
+        csvname = outroot + '_%i.%04i.csv'%(threadId,index)
         while os.path.exists(csvname):
-            csvname = outroot + '.%04i.csv'%index
+            csvname = outroot + '_%i.%04i.csv'%(threadId,index)
             index+=1
             logging.debug('%s'%csvname)
 
