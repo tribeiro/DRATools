@@ -22,41 +22,59 @@ def main(argv):
 	parser.add_option('-f','--filename',
 					  help = 'Input spectrum to fit.'
 					  ,type='string')
+	parser.add_option('-o','--output',
+					help = 'Input spectrum to fit.'
+					,type='string')
 
 	opt,args = parser.parse_args(argv)
 
-	llist = np.loadtxt(opt.filename,dtype='S',unpack=True)
+	csvlist = np.loadtxt(opt.filename,dtype='S',unpack=True,ndmin=2)
+
+	if not opt.output:
+		root = 'out_'+opt.filename
+		ldot = root.rfind('.')
+		if ldot > 0:
+			root = root[:ldot]+'.npy'
+		else:
+			root += '.npy'
+		opt.output = root
 	
-	dtype = [('scale', '<f8'), ('velocity', '<f8'),
-	 ('temp1', '<i4') , ('temp2', '<i4')]
-
-	hist = np.zeros(131*21).reshape(131,21)
+	fsize = np.max(np.array([len(ff) for ff in csvlist[0]]))
 	
-	ax1 = py.subplot(221)
-	ax2 = py.subplot(222)
-	ax3 = py.subplot(223)
-	ax4 = py.subplot(224)
+	dtype = [('s1', '<f8')   , ('v1', '<f8')   ,
+			 ('s2', '<f8')   , ('v2', '<f8')   ,
+			 ('t1_0', '<i4') , ('t1_1', '<i4') ,
+			 ('t2_0', '<i4') , ('t2_1', '<i4') , ('t2_2', '<i4') ,
+			 ('chi2', '<f8') , ('fname', 'S%i'%fsize) ]
 
-	for i,l in enumerate(llist[0]):
+	mcres = np.zeros(len(csvlist[0]),dtype=dtype)
 
-		csvlist = np.loadtxt(l,dtype='S')
+	for i,l in enumerate(csvlist[0]):
 
-		for csv in csvlist:
-			log.info('Reading in %s...'%(csv))
-			try:
-				data = Table.read(csv,format='ascii')
-				ax1.errorbar(data['Mean'][0],data['Mean'][1],data['MC Error'][0],data['MC Error'][1],fmt=llist[1][i])
-				ax2.errorbar(data['Mean'][2],data['Mean'][3],data['MC Error'][2],data['MC Error'][3],fmt=llist[1][i])
-				ax3.errorbar(data['Mean'][4],data['Mean'][5],data['MC Error'][4],data['MC Error'][5],fmt=llist[1][i])
-				ax4.errorbar(data['Mean'][6],data['Mean'][7],data['MC Error'][6],data['MC Error'][7],fmt=llist[1][i])
-			except:
-				log.exception(sys.exc_info())
-				pass
+		log.info('Reading in %s...'%(l))
+		try:
+			data = Table.read(l,format='ascii')
+			sp = np.load(l.replace('.csv','.spres.npy'))
+			chi2 = np.mean( (sp['data'] - sp['model'])**2. / sp['model'] )
+			
+			mcres['s1'][i] = data['Mean'][0]
+			mcres['v1'][i] = data['Mean'][2]
+			mcres['s2'][i] = data['Mean'][1]
+			mcres['v2'][i] = data['Mean'][3]
+			mcres['t1_0'][i] = data['Mean'][4]
+			mcres['t1_1'][i] = data['Mean'][5]
+			mcres['t2_0'][i] = data['Mean'][6]
+			mcres['t2_1'][i] = data['Mean'][7]
+			mcres['t2_2'][i] = data['Mean'][8]
+			mcres['chi2'][i] = chi2
+			mcres['fname'][i] = l
+		except:
+			log.exception(sys.exc_info())
+			pass
 
-	py.show()
-	#py.xlim(-1,45)
-	#py.ylim(-1,12)
-	py.show()
+	log.info('Saving output result to %s'%opt.output)
+	np.save(opt.output,mcres)
+	return 0
 
 ################################################################################
 

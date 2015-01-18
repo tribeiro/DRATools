@@ -36,6 +36,7 @@
 		F16AE2BE1576E89B00175EB1 /* gdefringeF.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = gdefringeF.py; path = SOAR/goodman/gdefringeF.py; sourceTree = "<group>"; };
 		F18630BF1981EF9300EF1BE2 /* gengrid_nextgen.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = gengrid_nextgen.py; path = specfit/gengrid_nextgen.py; sourceTree = "<group>"; };
 		F18630C01990017200EF1BE2 /* cutspec.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = cutspec.py; path = specfit/cutspec.py; sourceTree = "<group>"; };
+		F195A1B71A654E33002F1AE1 /* chi2_mcres.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = chi2_mcres.py; path = specfit/chi2_mcres.py; sourceTree = "<group>"; };
 		F1968EBD188079D100B50350 /* sland.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = sland.sh; sourceTree = "<group>"; };
 		F198D17018F3224900B9798F /* specfitMC.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = specfitMC.py; path = specfit/specfitMC.py; sourceTree = "<group>"; };
 		F1B2DF041A125BAB00B2DCE3 /* matchres.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = matchres.py; path = wdms_mr/matchres.py; sourceTree = "<group>"; };
@@ -49,13 +50,14 @@
 		F1D8A8B818EB658500693FF4 /* dk2npy.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = dk2npy.py; sourceTree = "<group>"; };
 		F1DBF7091959D942004B88B3 /* pl_grid.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = pl_grid.py; path = specfit/pl_grid.py; sourceTree = "<group>"; };
 		F1DBF70A195A41EB004B88B3 /* ngen2npy.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = ngen2npy.py; path = specfit/ngen2npy.py; sourceTree = "<group>"; };
-		F1DBF70D195DAD62004B88B3 /* compare_mcres.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = compare_mcres.py; path = specfit/compare_mcres.py; sourceTree = "<group>"; };
+		F1DBF70D195DAD62004B88B3 /* proc_mcres.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = proc_mcres.py; path = specfit/proc_mcres.py; sourceTree = "<group>"; };
 		F1DBF70F19684BA5004B88B3 /* cluz.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = cluz.py; path = UGem/cluz.py; sourceTree = "<group>"; };
 		F1DBF71119687B13004B88B3 /* cluz.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = cluz.py; path = UXUma/cluz.py; sourceTree = "<group>"; };
 		F1DF7B581847AFF8006E6E02 /* psim_tst01.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = psim_tst01.py; sourceTree = "<group>"; };
 		F1DF7B591847D3DE006E6E02 /* psim_tst02.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = psim_tst02.py; sourceTree = "<group>"; };
 		F1DF7B5A1847D3F6006E6E02 /* psimF.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = psimF.py; sourceTree = "<group>"; };
 		F1E060441996574A00785B00 /* stardens.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = stardens.py; sourceTree = "<group>"; };
+		F1EB4D8E1A6B2A2D00BA2968 /* mkhist_mcrec.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = mkhist_mcrec.py; path = specfit/mkhist_mcrec.py; sourceTree = "<group>"; };
 		F1ED28A7185F771C00B7EB8F /* cluz.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = cluz.py; sourceTree = "<group>"; };
 		F1F8F59018D8AC6C006B551B /* trailedspec2.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = trailedspec2.py; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -146,7 +148,9 @@
 				F1691510192ED64B0049BDDB /* mcmatchgrid.py */,
 				F1691511192FD22F0049BDDB /* get_Teff_logg.py */,
 				F1DBF7091959D942004B88B3 /* pl_grid.py */,
-				F1DBF70D195DAD62004B88B3 /* compare_mcres.py */,
+				F1DBF70D195DAD62004B88B3 /* proc_mcres.py */,
+				F1EB4D8E1A6B2A2D00BA2968 /* mkhist_mcrec.py */,
+				F195A1B71A654E33002F1AE1 /* chi2_mcres.py */,
 			);
 			name = specfit;
 			sourceTree = "<group>";
