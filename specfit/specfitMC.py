@@ -8,6 +8,7 @@ C - Tiago Ribeiro
 import sys,os
 import numpy as np
 import matplotlib.pyplot as py
+from StringIO import StringIO
 import specfitF as spf
 import pymc
 from pymc import MCMC
@@ -44,11 +45,15 @@ C - Tiago Ribeiro
                       files are suported.'%(ofile))
 	
 	# Load template spectra, for each component as Picke files
-
-	spMod.grid_ndim[0] = 2 # Set grid dimension for 1st component
-	spMod.grid_ndim[1] = 2 # Set grid dimension for 2nd component
-
+	
 	for i in range(ncomp):
+		fp = open(templist[i],'r')
+		line1 = StringIO(fp.readline())
+		line1 = np.loadtxt(line1,dtype='S')
+		spMod.grid_ndim[i] = len(line1)-1 # Set grid dimension for 1st component
+
+		logging.debug('Component %s[%i] with %i dimentions.'%(templist[i],i,spMod.grid_ndim[i]))
+
 		if temptype == 1:
 			spMod.loadPickleTemplate(i,templist[i])
 		elif temptype == 2:
@@ -166,17 +171,20 @@ number of components to fit is larger than 1.'''
 					help = '''The number of components to fit. By default only 
 one is used.''',type='int',default=1)
     parser.add_option('--niter',
-					  help = "Number of iterations",
+					  help = "Number of iterations (default=10000).",
 					  type='int',default=10000)
     parser.add_option('--burn',
-					  help = "Number of burn iterations",
+					  help = "Number of burn iterations (default=2500).",
 					  type='int',default=2500)
     parser.add_option('--thin',
-					  help = "Number of sub-iterations for each iteration",
+					  help = "Number of sub-iterations for each iteration (default=3).",
 					  type='int',default=3)
-    parser.add_option('--tune',
-					  help = "Number of iterations for tuning.",
+    parser.add_option('--tune_interval',
+					  help = "Number of iterations for tuning (default=500).",
 					  type='int',default=500)
+    parser.add_option('--tune_throughout',
+                      help = 'Run in verbose mode (default = False).',action='store_true',
+					  default=False)
     parser.add_option('--templatetype',
 					help = '''Type of template file. Choices are: 1 - Pickle,
 2 - SDSSFits, 3 - Coelho 2014 model spectra''',type='int',default=1)
@@ -307,7 +315,7 @@ one is used.''',type='int',default=1)
     logging.info('Starting sampler...')
     #M.sample(iter=70000,burn=40000,thin=3,verbose=0)#,verbose=-1),thin=3
     M.sample(iter=opt.niter,burn=opt.burn,thin=opt.thin,
-			tune_interval=opt.tune,tune_throughout=True,
+			tune_interval=opt.tune_interval,tune_throughout=opt.tune_throughout,
 			verbose=0)
 #,tune_interval=1000,tune_throughout=True,verbose=0)
 

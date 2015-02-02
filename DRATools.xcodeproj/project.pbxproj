@@ -20,6 +20,7 @@
 		F139C8891863799800C228A7 /* eclmapF.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = eclmapF.py; sourceTree = "<group>"; };
 		F139C88A18638E6500C228A7 /* clmin.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = clmin.py; sourceTree = "<group>"; };
 		F13B3A421A11512C00809525 /* snr_proc.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = snr_proc.py; path = wdms_mr/snr_proc.py; sourceTree = "<group>"; };
+		F147FE091A70402B00156AFB /* testResample.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = testResample.py; path = specfit/testResample.py; sourceTree = "<group>"; };
 		F148483F19A8C87300B4B281 /* varplot.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = varplot.py; path = variability/varplot.py; sourceTree = "<group>"; };
 		F14A157419FEBA3D00519737 /* snr_calc.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = snr_calc.py; path = wdms_mr/snr_calc.py; sourceTree = "<group>"; };
 		F14A157619FF1C1B00519737 /* snr_hist.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = snr_hist.py; path = wdms_mr/snr_hist.py; sourceTree = "<group>"; };
@@ -136,6 +137,7 @@
 			isa = PBXGroup;
 			children = (
 				F1D8A8B318E3B5EA00693FF4 /* specfitF.py */,
+				F147FE091A70402B00156AFB /* testResample.py */,
 				F198D17018F3224900B9798F /* specfitMC.py */,
 				F1D8A8B518E3BF0300693FF4 /* __init__.py */,
 				F1D8A8B418E3BE0400693FF4 /* specfit_v0.py */,

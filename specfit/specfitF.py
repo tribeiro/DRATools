@@ -12,6 +12,7 @@ from astropy.io import fits as pyfits
 from astropysics import spec
 import scipy.ndimage.filters
 import scipy.constants
+import scipy.interpolate
 import logging
 
 _c_kms = scipy.constants.c / 1.e3  # Speed of light in km s^-1
@@ -265,7 +266,7 @@ Calculate model spectra.
 		dopCor = np.sqrt((1.0 + self.vel[0]/_c_kms)/(1. - self.vel[0]/_c_kms))
 		scale = self.scale[0]*self.templateScale[0][self.ntemp[0]]
 		
-		_model = spec.Spectrum(	self.template[0][self.ntemp[0]].x*dopCor,
+		_model = MySpectrum(	self.template[0][self.ntemp[0]].x*dopCor,
 								self.template[0][self.ntemp[0]].flux*scale)
 		
 		#logging.debug('Applying instrument signature')
@@ -280,7 +281,7 @@ Calculate model spectra.
 			dopCor = np.sqrt((1.0 + self.vel[i]/_c_kms)/(1. - self.vel[i]/_c_kms))
 			scale = self.scale[i]*self.templateScale[i][self.ntemp[i]]
 			
-			tmp = spec.Spectrum(self.template[i][self.ntemp[i]].x*dopCor,
+			tmp = MySpectrum(self.template[i][self.ntemp[i]].x*dopCor,
 								self.template[i][self.ntemp[i]].flux*scale)
 			
 			#logging.debug('Applying instrument signature')
@@ -289,7 +290,7 @@ Calculate model spectra.
 			
 			#tmp.flux = scipy.ndimage.filters.gaussian_filter(tmp.flux,kernel)
 			
-			tmp = spec.Spectrum(*tmp.resample(_model.x,replace=False))
+			tmp = MySpectrum(*tmp.resample(_model.x,replace=False))
 			
 			_model.flux += tmp.flux
 		
@@ -303,7 +304,7 @@ Calculate model spectra.
 		#_model.flux = scipy.ndimage.filters.gaussian_filter(_model.flux,kernel)
 		
 		logging.debug('Resampling model spectra')
-		_model = spec.Spectrum(*_model.resample(self.ospec.x,replace=False))
+		_model = MySpectrum(*_model.myResample(self.ospec.x,replace=False))
 		return _model
 
 	##################################################################
@@ -413,5 +414,59 @@ Find a suitable scale values for all spectra.
 					minscale = nscale
 
 		return maxscale,minscale
+
+######################################################################
+
+class MySpectrum(spec.Spectrum):
+
+	def __init__(self,	x, flux, err=None, ivar=None,
+				 unit='wl', name='', copy=True, sort=True):
+
+		spec.Spectrum.__init__(self, x=x, flux=flux, err=err, ivar=ivar,
+							   unit=unit, name=name, copy=copy, sort=sort)
+
+	##################################################################
+
+	def myResample(self,newx,replace=False):
+
+		'''
+		kernel = np.mean(newx[1:]-newx[:-1])/np.mean(self.x[1:]-self.x[:-1])
+		
+		dx = self.x[1:]-self.x[:-1]
+		
+		newy = scipy.ndimage.filters.gaussian_filter(self.flux,np.float(kernel))
+		tck = scipy.interpolate.splrep(self.x,newy)
+		newy2 =scipy.interpolate.splev(newx,tck)
+		'''
+		newy = np.zeros(len(newx))
+		
+		for i in range(len(newx)):
+			xini = 0
+			xend = 0
+			
+			if i == 0:
+				xini = newx[i]-(newx[i+1]-newx[i])/2.
+			else:
+				xini = newx[i]-(newx[i]-newx[i-1])/2.
+			
+			if i == len(newx)-1:
+				xend = newx[i]+(newx[i]-newx[i-1])/2.
+			else:
+				xend = newx[i]+(newx[i+1]-newx[i])/2.
+
+			mask = np.bitwise_and(self.x > xini, self.x < xend)
+
+			#newy[i] = np.sum( dx[mask[:-1]] * self.flux[mask] )
+			newy[i] = np.mean(self.flux[mask])
+			#print newx[i],newy[i],newy2[i],xini,xend, (xend-xini) , np.mean(self.flux[mask]),(xend-xini) * np.mean(self.flux[mask])
+			#print self.x[mask],self.flux[mask],dx[mask[:-1]]
+
+
+
+		return newx,newy #scipy.interpolate.splev(newx,tck)
+
+
+
+	##################################################################
 
 ######################################################################
