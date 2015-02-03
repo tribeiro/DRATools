@@ -438,6 +438,16 @@ class MySpectrum(spec.Spectrum):
 		tck = scipy.interpolate.splrep(self.x,newy)
 		newy2 =scipy.interpolate.splev(newx,tck)
 		'''
+
+		kernel = np.mean(newx[1:]-newx[:-1])/np.mean(self.x[1:]-self.x[:-1])/2./np.pi
+
+		newflux = scipy.ndimage.filters.gaussian_filter1d(self.flux,kernel)
+
+		tck = scipy.interpolate.splrep(self.x,newflux)
+		
+		return newx,scipy.interpolate.splev(newx,tck)
+
+		'''
 		newy = np.zeros(len(newx))
 		
 		for i in range(len(newx)):
@@ -464,7 +474,7 @@ class MySpectrum(spec.Spectrum):
 
 
 		return newx,newy #scipy.interpolate.splev(newx,tck)
-
+'''
 
 
 	##################################################################
