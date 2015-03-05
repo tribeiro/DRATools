@@ -22,7 +22,7 @@ def main(argv):
 	
 	for i,name in enumerate(mcdata.dtype.names[:-1]):
 		py.subplot(5,2,i+1)
-		py.hist(mcdata[name],weights=np.exp(mcdata['chi2'].min()/mcdata['chi2']))
+		py.hist(mcdata[name],weights=mcdata['chi2'].min()/mcdata['chi2'])
 
 	py.show()
 

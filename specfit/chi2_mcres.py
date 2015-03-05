@@ -44,8 +44,8 @@ def main(argv):
 	best=args[1:][chi2.argmin()]
 	worst=args[1:][chi2.argmax()]
 
-	print best
-	print worst
+	print best, chi2[ibest]
+	print worst, chi2[iworst]
 
 	py.hist(chi2,bins=100)
 

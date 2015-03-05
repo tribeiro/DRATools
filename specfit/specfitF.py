@@ -309,6 +309,61 @@ Calculate model spectra.
 
 	##################################################################
 
+	def modelSpecThreadSafe(self,vel,scale,ntemp):
+		'''
+Calculate model spectra.
+		'''
+		
+		#_model = self.template[0][self.ntemp[0]]
+
+		logging.debug('Building model spectra')
+		
+		dopCor = np.sqrt((1.0 + vel[0]/_c_kms)/(1. - vel[0]/_c_kms))
+		scale = scale[0]*self.templateScale[0][ntemp[0]]
+		
+		_model = MySpectrum(	self.template[0][ntemp[0]].x*dopCor,
+								self.template[0][ntemp[0]].flux*scale)
+		
+		#logging.debug('Applying instrument signature')
+		
+		#kernel = self.obsRes()/np.mean(_model.x[1:]-_model.x[:-1])
+		
+		#_model.flux = scipy.ndimage.filters.gaussian_filter(_model.flux,kernel)
+
+
+		for i in range(1,self.nspec):
+
+			dopCor = np.sqrt((1.0 + vel[i]/_c_kms)/(1. - vel[i]/_c_kms))
+			scale = scale[i]*self.templateScale[i][ntemp[i]]
+			
+			tmp = MySpectrum(self.template[i][ntemp[i]].x*dopCor,
+								self.template[i][ntemp[i]].flux*scale)
+			
+			#logging.debug('Applying instrument signature')
+			
+			#kernel = self.obsRes()/np.mean(tmp.x[1:]-tmp.x[:-1])
+			
+			#tmp.flux = scipy.ndimage.filters.gaussian_filter(tmp.flux,kernel)
+			
+			tmp = MySpectrum(*tmp.resample(_model.x,replace=False))
+			
+			_model.flux += tmp.flux
+		
+		'''
+		if not _model.isLinear():
+			logging.warning('Data must be linearized...')
+			
+		'''
+		#kernel = self.obsRes()/tmp.getDx()/2./np.pi
+		
+		#_model.flux = scipy.ndimage.filters.gaussian_filter(_model.flux,kernel)
+		
+		logging.debug('Resampling model spectra')
+		_model = MySpectrum(*_model.myResample(self.ospec.x,replace=False))
+		return _model
+
+	##################################################################
+
 	def normTemplate(self,ncomp,w0,w1):
 		'''
 Normalize spectra against data in the wavelenght regions
@@ -439,7 +494,7 @@ class MySpectrum(spec.Spectrum):
 		newy2 =scipy.interpolate.splev(newx,tck)
 		'''
 
-		kernel = np.mean(newx[1:]-newx[:-1])/np.mean(self.x[1:]-self.x[:-1])/2./np.pi
+		kernel = np.median(newx[1:]-newx[:-1])/np.median(self.x[1:]-self.x[:-1]) #*2.0 #/2./np.pi
 
 		newflux = scipy.ndimage.filters.gaussian_filter1d(self.flux,kernel)
 

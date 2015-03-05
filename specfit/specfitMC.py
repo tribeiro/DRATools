@@ -104,13 +104,13 @@ C - Tiago Ribeiro
 	
 	@pymc.deterministic
 	def spModel(scales=scales,velocity=velocity,template=template):
-		logging.debug('spModel: len(spMod.Grid) = %i'%(len(spMod.Grid)))
-		logging.debug('spModel: Ncomp   Scale   Vel temp1 temp2 lenGrid[0] lenGrid[1]')
+		#logging.debug('spModel: len(spMod.Grid) = %i'%(len(spMod.Grid)))
+		#logging.debug('spModel: Ncomp   Scale   Vel temp1 temp2 lenGrid[0] lenGrid[1]')
 		strlog = "spModel: "
 
 		for idx in range(len(scales)):
 		
-			strlog += '%5i %5.1e %5.1f '%(idx,scales[idx],
+			strlog += '%5i %6.4f %5.1f '%(idx,scales[idx],
 										  velocity[idx])
 			
 			spMod.scale[idx] = scales[idx]
@@ -121,22 +121,22 @@ C - Tiago Ribeiro
 				index[iidx] = template[idx*2+iidx]
 			spMod.ntemp[idx] = spMod.Grid[idx].item(*index)
 			
-			logging.debug(strlog)
-			strlog = "spModel: "
+		logging.debug(strlog)
+		#	strlog = "spModel: "
 			
 		modspec = spMod.modelSpec()
 		return modspec.flux
 
 	mflux = np.mean(spMod.ospec.flux)
 	#sig = pymc.Uniform('sig',
-	#				   np.min(spMod.ospec.err),
-	#				   np.max(spMod.ospec.err),
-	#				   value=np.median(spMod.ospec.err))
-	err = spMod.ospec.err
-	mask = spMod.ospec.x < 5000.
-	err[mask] = spMod.ospec.err[mask]/10.
+	#				   np.median(spMod.ospec.err),
+	#				   np.median(spMod.ospec.flux),
+	#				   value=np.median(spMod.ospec.flux)/2.)
+	sig = np.zeros_like(spMod.ospec.err)+np.median(spMod.ospec.flux)/2.
+	#mask = spMod.ospec.x < 5000.
+	#err[mask] = spMod.ospec.err[mask]/10.
 	y = pymc.Normal('y', mu=spModel,
-					tau=1./err,
+					tau=1./sig**2.,
 					value=spMod.ospec.flux,
                     observed=True)
 
@@ -148,7 +148,7 @@ C - Tiago Ribeiro
 def main(argv):
 
     logging.basicConfig(format='%(levelname)s:%(asctime)s::%(message)s',
-                        level=logging.INFO)
+                        level=logging.DEBUG)
 
     from optparse import OptionParser
 	
@@ -282,6 +282,7 @@ one is used.''',type='int',default=1)
 
     M.use_step_method(pymc.DiscreteMetropolis, M.template,
 					  proposal_distribution='Normal')
+    #M.use_step_method(pymc.AdaptiveMetropolis,)
     logging.info('Model done...')
 
     '''
@@ -316,7 +317,7 @@ one is used.''',type='int',default=1)
     #M.sample(iter=70000,burn=40000,thin=3,verbose=0)#,verbose=-1),thin=3
     M.sample(iter=opt.niter,burn=opt.burn,thin=opt.thin,
 			tune_interval=opt.tune_interval,tune_throughout=opt.tune_throughout,
-			verbose=0)
+			verbose=-1)
 #,tune_interval=1000,tune_throughout=True,verbose=0)
 
     logging.info('Sampler done. Saving results...')
