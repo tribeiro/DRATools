@@ -430,15 +430,17 @@ one is used.''',type='int',default=1)
     py.plot(mspec2.x,mspec2.flux,'b')
 
     if opt.savefig:
-        logging.info('Saving figure to %s'%(opt.output+'.png'))
-        py.savefig(plotname+'.png')
-        pltdir = os.path.join(os.path.abspath(opt.output),
-                                  os.path.basename(plotname))
+        pltdir = os.path.join(os.path.dirname(os.path.abspath(opt.output)),
+                              os.path.basename(plotname))
         if not os.path.exists(pltdir):
             logging.info('Creating %s...'%pltdir)
             os.mkdir(pltdir)
         else:
             logging.info('Directory %s exists...'%pltdir)
+
+        logging.info('Saving figure to %s'%(opt.output+'.png'))
+        
+        py.savefig(os.path.join(pltdir,plotname+'.png'))
 
         pymc.Matplot.plot(M,
                           path = pltdir)
