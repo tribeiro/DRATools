@@ -12,8 +12,8 @@ import matplotlib.pyplot as py
 from StringIO import StringIO
 import specfitF as spf
 import pymc
-from pymc import MCMC
-from pymc.Matplot import plot
+#from pymc import MCMC
+#from pymc.Matplot import plot
 import logging
 
 ################################################################################
@@ -255,6 +255,7 @@ one is used.''',type='int',default=1)
     logging.info('outfile: %s'%outfile)
 
     csvname=outroot+'_%i.csv'%(threadId)
+    plotname=outroot+'_%i'%(threadId)
     if opt.no_overwrite and os.path.exists(csvname):
         logging.debug('File %s exists (running on "no overwrite" mode).'%csvname)
         index = 0
@@ -427,12 +428,25 @@ one is used.''',type='int',default=1)
 
     py.plot(mspec1.x,mspec1.flux,'r')
     py.plot(mspec2.x,mspec2.flux,'b')
-	
+
     if opt.savefig:
         logging.info('Saving figure to %s'%(opt.output+'.png'))
-        py.savefig(opt.output+'.png')
+        py.savefig(plotname+'.png')
+        pltdir = os.path.join(os.path.abspath(opt.output),
+                                  os.path.basename(plotname))
+        if not os.path.exists(pltdir):
+            logging.info('Creating %s...'%pltdir)
+            os.mkdir(pltdir)
+        else:
+            logging.info('Directory %s exists...'%pltdir)
+
+        pymc.Matplot.plot(M,
+                          path = pltdir)
+        #pymc.Matplot.gof_plot(x_sim, x, name='y')
+
     if opt.show:
-        plot(M)
+        pymc.Matplot.plot(M)
+        pymc.Matplot.autocorrelation(M)
         py.show()
 
     logging.info('Done')

@@ -65,7 +65,7 @@ def main(argv):
 			mcres['t1_1'][i] = data['Mean'][5]
 			mcres['t2_0'][i] = data['Mean'][6]
 			mcres['t2_1'][i] = data['Mean'][7]
-			mcres['t2_2'][i] = data['Mean'][8]
+			#mcres['t2_2'][i] = data['Mean'][8]
 			mcres['chi2'][i] = chi2
 			mcres['fname'][i] = l
 		except:
