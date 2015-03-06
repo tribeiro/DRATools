@@ -7,6 +7,7 @@ C - Tiago Ribeiro
 
 import sys,os
 import numpy as np
+import scipy.stats
 import matplotlib.pyplot as py
 from StringIO import StringIO
 import specfitF as spf
@@ -277,8 +278,8 @@ one is used.''',type='int',default=1)
 
     M = pymc.MCMC(	ModelFactory( opt.n_comp, dfile,
                                      tlist, opt.templatetype) ,
-                    db = 'pickle',
-					dbname=dbname)
+                    db = 'ram')#,
+					#dbname=dbname)
 
     M.use_step_method(pymc.DiscreteMetropolis, M.template,
 					  proposal_distribution='Normal')
@@ -315,7 +316,11 @@ one is used.''',type='int',default=1)
 
     logging.info('Starting sampler...')
     #M.sample(iter=70000,burn=40000,thin=3,verbose=0)#,verbose=-1),thin=3
-    M.sample(iter=opt.niter,burn=opt.burn,thin=opt.thin,
+    NITER = opt.niter*opt.thin
+    NBURN = opt.burn*opt.thin
+    if NBURN > NITER:
+        NITER+=NBURN
+    M.sample(iter=NITER,burn=NBURN,thin=opt.thin,
 			tune_interval=opt.tune_interval,tune_throughout=opt.tune_throughout,
 			verbose=-1)
 #,tune_interval=1000,tune_throughout=True,verbose=0)
@@ -327,24 +332,30 @@ one is used.''',type='int',default=1)
     M.write_csv(csvname,variables=['scale','velocity','template'])
 	
     #grid = np.array(M.trace('template')[:]).reshape(2,-1)
+    dtype = [('scale1', '<f8'), ('vel1', '<f8'),
+             ('scale2', '<f8'), ('vel2', '<f8'),
+             ('tempscale1', '<f8'), ('tempscale2', '<f8') , ('sig', '<f8')]
+
+    for i in range(M.ncomp):
+        for j in range(M.spMod.grid_ndim[i]):
+            dtype.append(('temp%i_%i'%(i,j),'<i4'))
 
     oarray = np.zeros(	len(M.trace('scale')[:]),
-                        dtype=[('scale1', '<f8'), ('vel1', '<f8'),
-							   ('scale2', '<f8'), ('vel2', '<f8'),
-							   ('tempscale1', '<f8'), ('tempscale2', '<f8'),
-                               ('temp1_1', '<i4') , ('temp1_2', '<i4'),
-							   ('temp2_1', '<i4') , ('temp2_2', '<i4'),
-							   ('temp2_3', '<i4') , ('sig', '<f8')])
+                        dtype=dtype)
 
 
     oarray['scale1'] = np.array(	[i[0] for i in M.trace('scale')[:]] )
     oarray['scale2'] = np.array(	[i[1] for i in M.trace('scale')[:]] )
     oarray['vel1'] = np.array(	[i[0] for i in M.trace('velocity')[:]] )
     oarray['vel2'] = np.array(	[i[1] for i in M.trace('velocity')[:]] )
-    oarray['temp1_1'] = np.array(	[i[0] for i in M.trace('template')[:]] )
-    oarray['temp1_2'] = np.array(	[i[1] for i in M.trace('template')[:]] )
-    oarray['temp2_1'] = np.array(	[i[2] for i in M.trace('template')[:]] )
-    oarray['temp2_2'] = np.array(	[i[3] for i in M.trace('template')[:]] )
+
+    for i in range(M.ncomp):
+        index = np.zeros(M.spMod.grid_ndim[i])
+        for j in range(M.spMod.grid_ndim[i]):
+            oarray['temp%i_%i'%(i,j)] = np.array(	[ii[i*2+j] for ii in M.trace('template')[:]] )
+            index[j] = np.int(scipy.stats.mode(oarray['temp%i_%i'%(i,j)])[0][0])
+        M.spMod.ntemp[i] = M.spMod.Grid[i].item(*index)
+
     #oarray['temp2_3'] = np.array(	[i[4] for i in M.trace('template')[:]] )
     #oarray['sig'] = np.array(	[i for i in M.trace('sig')[:]] )
 	
@@ -352,12 +363,18 @@ one is used.''',type='int',default=1)
 		for icomp in range(len(oarray['temp1_1'])):
 			index = np.zeros(M.spMod.grid_ndim[idx],dtype=int)
 			for iidx in range(M.spMod.grid_ndim[idx]):
-				index[iidx] = oarray['temp%i_%i'%(idx+1,iidx+1)][icomp]
+				index[iidx] = oarray['temp%i_%i'%(idx,iidx)][icomp]
 			ntemp = M.spMod.Grid[idx].item(*index)
 			oarray['tempscale%i'%(idx+1)][icomp] = M.spMod.templateScale[idx][ntemp]
 
 
     np.save(outfile,oarray)
+
+    M.spMod.scale[0] = np.mean(oarray['scale1'])
+    M.spMod.scale[1] = np.mean(oarray['scale2'])
+
+    M.spMod.vel[0] = np.mean(oarray['vel1'])
+    M.spMod.vel[1] = np.mean(oarray['vel2'])
 
     mspec = M.spMod.modelSpec()
     scale1 = M.spMod.scale[0]
@@ -396,11 +413,11 @@ one is used.''',type='int',default=1)
 	
     py.subplot(243)
 
-    hh,edges = np.histogram(oarray['temp1_1'],bins=np.arange(-0.5,M.gridmax[0]))
+    hh,edges = np.histogram(oarray['temp0_0'],bins=np.arange(-0.5,M.gridmax[0]))
     py.bar(edges[:-1]+0.1,hh+1e-3)
 
     py.subplot(244)
-    hh,edges = np.histogram(oarray['temp1_2'],bins=np.arange(-0.5,M.gridmax[1]))
+    hh,edges = np.histogram(oarray['temp0_1'],bins=np.arange(-0.5,M.gridmax[1]))
     py.bar(edges[:-1]+0.1,hh+1e-3)
 
     py.subplot(212)
