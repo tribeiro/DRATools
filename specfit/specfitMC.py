@@ -439,7 +439,7 @@ one is used.''',type='int',default=1)
             logging.info('Directory %s exists...'%pltdir)
 
         logging.info('Saving figure to %s'%(opt.output+'.png'))
-        
+
         py.savefig(os.path.join(pltdir,plotname+'.png'))
 
         pymc.Matplot.plot(M,
