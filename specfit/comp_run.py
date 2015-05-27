@@ -30,14 +30,14 @@ def main(argv):
 
     for f in args[1:]:
         print '->',f
-        rr = np.loadtxt(f,unpack=True,usecols=(2,3,6,7,8))
-        if len(rr) > 4:
-            ax1.plot(rr[0])
-            ax2.plot(rr[1])
-            ax6.hist2d(rr[0],rr[1],bins=[np.arange(0,np.max(rr[0])),np.arange(0,np.max(rr[1]))])
-            ax3.plot(rr[2])
-            ax4.plot(rr[3])
-            ax5.plot(rr[4])
+        rr = np.loadtxt(f,unpack=True,usecols=(2,3,6,7))
+        #if len(rr) > 4:
+        ax1.plot(rr[0])
+        ax2.plot(rr[1])
+        ax6.hist2d(rr[0],rr[1],bins=[np.arange(0,np.max(rr[0])),np.arange(0,np.max(rr[1]))])
+        ax3.plot(rr[2])
+        ax4.plot(rr[3])
+        #ax5.plot(rr[4])
 
     print 'Done'
     py.show()

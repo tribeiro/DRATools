@@ -113,7 +113,6 @@ C - Tiago Ribeiro
         #logging.debug('spModel: len(spMod.Grid) = %i'%(len(spMod.Grid)))
         #logging.debug('spModel: Ncomp   Scale   Vel temp1 temp2 lenGrid[0] lenGrid[1]')
         strlog = "spModel: "
-
         for idx in range(len(scales)):
 
             strlog += '%5i %6.4f %5.1f '%(idx,scales[idx],
@@ -284,7 +283,7 @@ one is used.''',type='int',default=1)
 
     M = pymc.MCMC(	ModelFactory( opt.n_comp, dfile,
                                     tlist, opt.templatetype) ,
-                      db = 'ram')#,
+                      db = 'pickle')#,
     #dbname=dbname)
 
     #M.use_step_method(pymc.DiscreteMetropolis, M.template,
