@@ -80,9 +80,9 @@ C - Tiago Ribeiro
     val = np.zeros(ncomp)+level
     max = np.zeros(ncomp)+maxlevel
 
-    scales = pymc.Uniform('scale', min, max, value=val,size=ncomp)
+    scales = [ pymc.Uniform('scale%i'%(i+1), min, max, value=val) for i in range(ncomp) ]
     min,val,max = np.zeros(ncomp)-600.,np.zeros(ncomp),np.zeros(ncomp)+600.
-    velocity = pymc.Uniform('velocity', min, max , val ,size=ncomp)
+    velocity = [ pymc.Uniform('velocity%i'%(i+1), min, max , val) for i in range(ncomp) ]
 
     gridmin = np.zeros(np.sum(spMod.grid_ndim),dtype=int)
     gridmax = np.zeros(np.sum(spMod.grid_ndim),dtype=int)
