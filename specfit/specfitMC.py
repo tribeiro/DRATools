@@ -358,10 +358,10 @@ one is used.''',type='int',default=1)
                           dtype=dtype)
 
 
-    oarray['scale1'] = np.array(	[i[0] for i in M.trace('scale1')[:]] )
-    oarray['scale2'] = np.array(	[i[1] for i in M.trace('scale2')[:]] )
-    oarray['vel1'] = np.array(	[i[0] for i in M.trace('velocity1')[:]] )
-    oarray['vel2'] = np.array(	[i[1] for i in M.trace('velocity2')[:]] )
+    oarray['scale1'] = np.array(	[i for i in M.trace('scale1')[:]] )
+    oarray['scale2'] = np.array(	[i for i in M.trace('scale2')[:]] )
+    oarray['vel1'] = np.array(	[i for i in M.trace('velocity1')[:]] )
+    oarray['vel2'] = np.array(	[i for i in M.trace('velocity2')[:]] )
 
     for i in range(M.ncomp):
         index = np.zeros(M.spMod.grid_ndim[i])
