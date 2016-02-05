@@ -66,6 +66,7 @@ C - Tiago Ribeiro
 
     spMod.normTemplate(0,5500.,5520.)
     spMod.normTemplate(1,5500.,5520.)
+    spMod.setAutoProp(True)
 
     spMod.preprocTemplate()
 
@@ -76,11 +77,13 @@ C - Tiago Ribeiro
     maxlevel *= 2.0
     minlevel /= 2.0
 
-    min = np.zeros(ncomp)+minlevel
-    val = np.zeros(ncomp)+level
-    max = np.zeros(ncomp)+maxlevel
+    # min = np.zeros(ncomp)+minlevel
+    # val = np.zeros(ncomp)+level
+    # max = np.zeros(ncomp)+maxlevel
 
-    scales = [ pymc.Uniform('scale%i'%(i+1), min[i], max[i], value=val[i]) for i in range(ncomp) ]
+    # scale = pymc.Uniform('scale', minlevel, maxlevel, value=level)
+    proportion = pymc.Uniform('proportion', 0., 1., value=0.5)
+
     min,val,max = np.zeros(ncomp)-600.,np.zeros(ncomp),np.zeros(ncomp)+600.
     velocity = [ pymc.Uniform('velocity%i'%(i+1), min[i], max[i] , val[i]) for i in range(ncomp) ]
 
@@ -109,16 +112,20 @@ C - Tiago Ribeiro
     # Prepare PyMC deterministic variables
 
     @pymc.deterministic
-    def spModel(scales=scales,velocity=velocity,template=template):
+    def spModel(proportion=proportion,velocity=velocity,template=template):
         #logging.debug('spModel: len(spMod.Grid) = %i'%(len(spMod.Grid)))
         #logging.debug('spModel: Ncomp   Scale   Vel temp1 temp2 lenGrid[0] lenGrid[1]')
-        strlog = "spModel: "
-        for idx in range(len(scales)):
 
-            strlog += '%5i %6.4f %5.1f '%(idx,scales[idx],
+        spMod.scale[0] = (1.0-proportion)
+        spMod.scale[1] = (proportion)
+        ascale = (1.0-proportion, proportion)
+
+        strlog = "spModel: "
+        for idx in range(len(velocity)):
+
+            strlog += '%5i %6.4f %5.1f '%(idx,ascale[idx],
                                           velocity[idx])
 
-            spMod.scale[idx] = scales[idx]
             spMod.vel[idx] = velocity[idx]
             index = np.zeros(spMod.grid_ndim[idx],dtype=int)
             for iidx in range(spMod.grid_ndim[idx]):
@@ -346,20 +353,19 @@ one is used.''',type='int',default=1)
     M.write_csv(csvname) #,variables=ovars)
 
     #grid = np.array(M.trace('template')[:]).reshape(2,-1)
-    dtype = [('scale1', '<f8'), ('vel1', '<f8'),
-             ('scale2', '<f8'), ('vel2', '<f8'),
+    dtype = [('proportion', '<f8'), ('vel1', '<f8'), ('vel2', '<f8'),
              ('tempscale1', '<f8'), ('tempscale2', '<f8') , ('sig', '<f8')]
 
     for i in range(M.ncomp):
         for j in range(M.spMod.grid_ndim[i]):
             dtype.append(('temp%i_%i'%(i,j),'<i4'))
 
-    oarray = np.zeros(	len(M.trace('scale1')[:]),
+    oarray = np.zeros(	len(M.trace('proportion')[:]),
                           dtype=dtype)
 
 
-    oarray['scale1'] = np.array(	[i for i in M.trace('scale1')[:]] )
-    oarray['scale2'] = np.array(	[i for i in M.trace('scale2')[:]] )
+    # oarray['scale'] = np.array(	[i for i in M.trace('scale')[:]] )
+    oarray['proportion'] = np.array(	[i for i in M.trace('proportion')[:]] )
     oarray['vel1'] = np.array(	[i for i in M.trace('velocity1')[:]] )
     oarray['vel2'] = np.array(	[i for i in M.trace('velocity2')[:]] )
 
@@ -384,8 +390,8 @@ one is used.''',type='int',default=1)
 
     np.save(outfile,oarray)
 
-    M.spMod.scale[0] = np.mean(oarray['scale1'])
-    M.spMod.scale[1] = np.mean(oarray['scale2'])
+    M.spMod.scale[0] = 1.0 - np.mean(oarray['proportion'])
+    M.spMod.scale[1] = np.mean(oarray['proportion'])
 
     M.spMod.vel[0] = np.mean(oarray['vel1'])
     M.spMod.vel[1] = np.mean(oarray['vel2'])

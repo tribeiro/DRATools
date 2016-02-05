@@ -56,6 +56,13 @@ Initialize class.
         # store the observed spectra
         self.ospec = None
 
+        self._autoprop = False
+
+    ##################################################################
+
+    def setAutoProp(self,value):
+        self._autoprop = value
+
     ##################################################################
 
     def loadNextGenTemplate(self, ncomp, filename):
@@ -299,6 +306,10 @@ Calculate model spectra.
 
         logging.debug('Resampling model spectra')
         _model = MySpectrum(*_model.myResample(self.ospec.x, replace=False))
+        if self._autoprop:
+            mflux = np.mean(_model.flux)
+            oflux = np.mean(self.ospec.flux)
+            _model.flux *= (oflux/mflux)
         return _model
 
     ##################################################################
