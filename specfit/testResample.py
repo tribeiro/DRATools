@@ -44,12 +44,13 @@ def main(argv):
     spMod.loadPickleTemplate(0,os.path.join(_path,_spt))
 
     #spMod.normTemplate(0,5500.,5520.)
-    spMod.normTemplate(0,4500.,7500.)
+    # spMod.normTemplate(0,4500.,7500.)
+    spMod.normTemplate(0,8000.,9000.)
     #
     ############################################################################
     #
 
-    spMod.scale[0] = 0.4
+    spMod.scale[0] = 1.0
     #spMod.ntemp[0] =
     #spMod.ntemp[0] = 6
 
